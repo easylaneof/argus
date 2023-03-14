@@ -1,18 +1,28 @@
 package ru.tinkoff.edu.java.parser;
 
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static ru.tinkoff.edu.java.parser.uri.UriTestUtils.*;
 
-@SpringBootTest(classes = LinkParserServiceTestConfiguration.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = LinkParserServiceTest.LinkParserServiceTestConfiguration.class)
 public class LinkParserServiceTest {
+    @TestConfiguration
+    @ComponentScan("ru.tinkoff.edu.java.parser")
+    static class LinkParserServiceTestConfiguration {
+    }
+
     @Autowired
     LinkParserService linkParserService;
 
