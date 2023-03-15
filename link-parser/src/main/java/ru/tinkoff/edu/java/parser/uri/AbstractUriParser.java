@@ -29,7 +29,6 @@ public abstract class AbstractUriParser implements UriParser {
 
     private boolean isUriOfHost(final URI uri) {
         return host.equalsIgnoreCase(uri.getHost()) &&
-               (uri.getPort() == -1 || uri.getPort() == 80) &&
                (HTTP.equals(uri.getScheme()) || HTTPS.equals(uri.getScheme()));
     }
 }
