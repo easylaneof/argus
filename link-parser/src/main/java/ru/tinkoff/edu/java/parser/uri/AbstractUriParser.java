@@ -1,9 +1,9 @@
 package ru.tinkoff.edu.java.parser.uri;
 
+import jakarta.annotation.Nullable;
 import ru.tinkoff.edu.java.parser.ParsingResult;
 
 import java.net.URI;
-import java.util.Optional;
 
 public abstract class AbstractUriParser implements UriParser {
     private static final String HTTP = "http";
@@ -16,26 +16,16 @@ public abstract class AbstractUriParser implements UriParser {
     }
 
     @Override
-    public final Optional<ParsingResult> parse(URI uri) {
+    public final ParsingResult parse(URI uri) {
         if (!isUriOfHost(uri)) {
-            return Optional.empty();
+            return null;
         }
 
-        String path = uri.getPath();
-
-        var beginsWithSlash = path.startsWith("/");
-        var endsWithSlash = path.endsWith("/");
-
-        if (beginsWithSlash || endsWithSlash) {
-            int beginIndex = beginsWithSlash ? 1 : 0;
-            int endIndex = endsWithSlash ? path.length() - 1 : path.length();
-            path = path.substring(beginIndex, endIndex);
-        }
-
+        String path = uri.getPath().replaceAll("/$|^/", ""); // replace first and last slashes
         return parseImpl(path.split("/"));
     }
 
-    protected abstract Optional<ParsingResult> parseImpl(String[] pathParts);
+    protected abstract @Nullable ParsingResult parseImpl(String[] pathParts);
 
     private boolean isUriOfHost(final URI uri) {
         return host.equalsIgnoreCase(uri.getHost()) &&

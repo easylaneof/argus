@@ -17,13 +17,13 @@ public class GithubUriParserTest {
     @ParameterizedTest
     @MethodSource("provideInvalidLinks")
     void returnsEmptyForInvalidLinks(URI invalidLink) {
-        assertThat(parser.parse(invalidLink)).isEmpty();
+        assertThat(parser.parse(invalidLink)).isNull();
     }
 
     @ParameterizedTest
     @MethodSource("provideUsersAndRepositories")
     void returnsValidResult(final URI uri, final String user, final String repository) {
-        final var result = parser.parse(uri).orElseThrow();
+        final var result = parser.parse(uri);
 
         assertThat(result).isInstanceOf(ParsingResult.GithubRepository.class);
 

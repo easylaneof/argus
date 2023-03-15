@@ -29,13 +29,13 @@ public class LinkParserServiceTest {
     @ParameterizedTest
     @MethodSource("provideInvalidLinks")
     void returnsEmptyForInvalidLinks(String invalidLink) {
-        assertThat(linkParserService.parse(invalidLink)).isEmpty();
+        assertThat(linkParserService.parse(invalidLink)).isNull();
     }
 
     @ParameterizedTest
     @MethodSource("provideStackOverflowQuestionIds")
     void parsesStackOverflowLink(String link, String questionId) {
-        ParsingResult result = linkParserService.parse(link).orElseThrow();
+        ParsingResult result = linkParserService.parse(link);
 
         assertThat(result).isInstanceOf(ParsingResult.StackOverflowQuestion.class);
 
@@ -47,7 +47,7 @@ public class LinkParserServiceTest {
     @ParameterizedTest
     @MethodSource("provideGithubUsersAndRepositories")
     void parsesGithubLink(String link, String user, String repositoryName) {
-        ParsingResult result = linkParserService.parse(link).orElseThrow();
+        ParsingResult result = linkParserService.parse(link);
 
         assertThat(result).isInstanceOf(ParsingResult.GithubRepository.class);
 

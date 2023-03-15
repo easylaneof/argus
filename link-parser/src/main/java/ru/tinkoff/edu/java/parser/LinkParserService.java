@@ -1,7 +1,7 @@
 package ru.tinkoff.edu.java.parser;
 
-import java.util.Optional;
+import jakarta.annotation.Nullable;
 
 public interface LinkParserService {
-    Optional<ParsingResult> parse(String url);
+    @Nullable ParsingResult parse(String url);
 }

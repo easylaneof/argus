@@ -7,7 +7,7 @@ import ru.tinkoff.edu.java.parser.uri.UriParser;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -15,19 +15,20 @@ public class LinkParserServiceImpl implements LinkParserService {
     private final List<UriParser> parsers;
 
     @Override
-    public Optional<ParsingResult> parse(String url) {
+    public ParsingResult parse(String url) {
         URI uri;
 
         try {
             uri = new URI(url);
         } catch (URISyntaxException e) {
-            return Optional.empty();
+            return null;
         }
 
         return parsers
                 .stream()
                 .map(parser -> parser.parse(uri))
-                .flatMap(Optional::stream)
-                .findFirst();
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
     }
 }

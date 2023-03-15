@@ -3,8 +3,6 @@ package ru.tinkoff.edu.java.parser.uri;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.parser.ParsingResult;
 
-import java.util.Optional;
-
 @Component
 public class StackOverflowUriParser extends AbstractUriParser {
     private static final String STACK_OVERFLOW_HOST = "stackoverflow.com";
@@ -15,15 +13,15 @@ public class StackOverflowUriParser extends AbstractUriParser {
     }
 
     @Override
-    protected Optional<ParsingResult> parseImpl(String[] pathParts) {
+    protected ParsingResult parseImpl(String[] pathParts) {
         if (pathParts.length != 3) {
-            return Optional.empty();
+            return null;
         }
 
         if (!QUESTIONS.equals(pathParts[0])) {
-            return Optional.empty();
+            return null;
         }
 
-        return Optional.of(new ParsingResult.StackOverflowQuestion(pathParts[1]));
+        return new ParsingResult.StackOverflowQuestion(pathParts[1]);
     }
 }
