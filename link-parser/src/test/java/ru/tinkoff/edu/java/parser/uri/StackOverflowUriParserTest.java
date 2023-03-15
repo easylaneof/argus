@@ -18,13 +18,13 @@ public class StackOverflowUriParserTest {
     @ParameterizedTest
     @MethodSource("provideInvalidLinks")
     void returnsEmptyForInvalidLinks(URI invalidLink) {
-        assertThat(parser.parse(invalidLink)).isEmpty();
+        assertThat(parser.parse(invalidLink)).isNull();
     }
 
     @ParameterizedTest
     @MethodSource("provideQuestionIds")
     void returnsValidResult(final URI uri, final String questionId) {
-        final var result = parser.parse(uri).orElseThrow();
+        final var result = parser.parse(uri);
 
         assertThat(result).isInstanceOf(ParsingResult.StackOverflowQuestion.class);
 
