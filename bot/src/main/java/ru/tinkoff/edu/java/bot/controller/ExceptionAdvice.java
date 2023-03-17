@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.scrapper.controller;
+package ru.tinkoff.edu.java.bot.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -7,7 +7,7 @@ import org.springframework.web.bind.MissingRequestValueException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.tinkoff.edu.scrapper.dto.ApiErrorResponse;
+import ru.tinkoff.edu.java.bot.dto.ApiErrorResponse;
 
 import java.util.List;
 
