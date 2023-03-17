@@ -1,8 +1,8 @@
-package ru.tinkoff.edu.java.parser;
+package ru.tinkoff.edu.parser;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.tinkoff.edu.java.parser.uri.UriParser;
+import ru.tinkoff.edu.parser.uri.UriParser;
 
 import java.util.List;
 import java.util.Objects;

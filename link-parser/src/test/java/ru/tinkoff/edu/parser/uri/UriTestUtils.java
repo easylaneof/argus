@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.parser.uri;
+package ru.tinkoff.edu.parser.uri;
 
 import java.net.URI;
 

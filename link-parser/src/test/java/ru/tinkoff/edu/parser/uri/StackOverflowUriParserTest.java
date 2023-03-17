@@ -1,16 +1,14 @@
-package ru.tinkoff.edu.java.parser.uri;
+package ru.tinkoff.edu.parser.uri;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import ru.tinkoff.edu.java.parser.ParsingResult;
+import ru.tinkoff.edu.parser.ParsingResult;
 
 import java.net.URI;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static ru.tinkoff.edu.java.parser.uri.UriTestUtils.stackOverflowURI;
-import static ru.tinkoff.edu.java.parser.uri.UriTestUtils.stackOverflowUriWithTrailingSlash;
 
 public class StackOverflowUriParserTest {
     private final StackOverflowUriParser parser = new StackOverflowUriParser();
@@ -36,8 +34,8 @@ public class StackOverflowUriParserTest {
     private static Stream<Arguments> provideQuestionIds() {
         return Stream.of("1642028", "111111")
                 .flatMap(questionId -> Stream.of(
-                        Arguments.of(stackOverflowURI(questionId), questionId),
-                        Arguments.of(stackOverflowUriWithTrailingSlash(questionId), questionId)
+                        Arguments.of(UriTestUtils.stackOverflowURI(questionId), questionId),
+                        Arguments.of(UriTestUtils.stackOverflowUriWithTrailingSlash(questionId), questionId)
                 ));
     }
 

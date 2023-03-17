@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.parser;
+package ru.tinkoff.edu.parser;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,13 +13,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static ru.tinkoff.edu.java.parser.uri.UriTestUtils.*;
+import static ru.tinkoff.edu.parser.uri.UriTestUtils.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = LinkParserServiceTest.LinkParserServiceTestConfiguration.class)
 public class LinkParserServiceTest {
     @TestConfiguration
-    @ComponentScan("ru.tinkoff.edu.java.parser")
+    @ComponentScan("ru.tinkoff.edu.parser")
     static class LinkParserServiceTestConfiguration {
     }
 

@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.parser;
+package ru.tinkoff.edu.parser;
 
 import jakarta.annotation.Nullable;
 
