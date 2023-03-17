@@ -1,7 +1,7 @@
-package ru.tinkoff.edu.java.parser.uri;
+package ru.tinkoff.edu.parser.uri;
 
 import org.springframework.stereotype.Component;
-import ru.tinkoff.edu.java.parser.ParsingResult;
+import ru.tinkoff.edu.parser.ParsingResult;
 
 @Component
 public class StackOverflowUriParser extends AbstractUriParser {

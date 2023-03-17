@@ -1,7 +1,7 @@
-package ru.tinkoff.edu.java.parser.uri;
+package ru.tinkoff.edu.parser.uri;
 
 import jakarta.annotation.Nullable;
-import ru.tinkoff.edu.java.parser.ParsingResult;
+import ru.tinkoff.edu.parser.ParsingResult;
 
 import java.net.URI;
 
