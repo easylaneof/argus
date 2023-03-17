@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.tinkoff.edu.scrapper.dto.AddLinkRequest;
 import ru.tinkoff.edu.scrapper.dto.LinkResponse;
 import ru.tinkoff.edu.scrapper.dto.ListLinkResponse;
+import ru.tinkoff.edu.scrapper.dto.RemoveLinkRequest;
+import ru.tinkoff.edu.scrapper.exception.LinkNotFoundException;
 
 import java.util.List;
 
@@ -24,11 +26,11 @@ public class LinksController {
     }
 
     @DeleteMapping("/links")
-    public ResponseEntity<LinkResponse> removeLink(@RequestHeader(TG_CHAT_ID_HEADER) long chatId, @RequestBody AddLinkRequest addLinkRequest) {
+    public ResponseEntity<LinkResponse> removeLink(@RequestHeader(TG_CHAT_ID_HEADER) long chatId, @RequestBody RemoveLinkRequest removeLinkRequest) {
         if (chatId == -1) { // stub
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new LinkNotFoundException(removeLinkRequest);
         }
 
-        return new ResponseEntity<>(new LinkResponse(0, addLinkRequest.link()), HttpStatus.OK);
+        return new ResponseEntity<>(new LinkResponse(0, removeLinkRequest.link()), HttpStatus.OK);
     }
 }
