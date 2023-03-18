@@ -1,0 +1,129 @@
+package ru.tinkoff.edu.scrapper.client.stackoverflow;
+
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.web.reactive.function.client.WebClient;
+import ru.tinkoff.edu.parser.ParsingResult;
+
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoField;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+class StackOverflowClientTest {
+    MockWebServer mockWebServer;
+
+    StackOverflowClient stackOverflowClient;
+
+    @BeforeEach
+    void setup() {
+        mockWebServer = new MockWebServer();
+        stackOverflowClient = new StackOverflowClientImpl(
+                WebClient
+                        .builder()
+                        .baseUrl(mockWebServer.url("/").url().toString())
+                        .build()
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideValidResponses")
+    void returnsValidResponse(StackOverflowQuestionResponse expected) throws InterruptedException {
+        mockApiResponse("""
+                  {
+                      "items": [{"question_id": %s, "last_activity_date": %s}]
+                  }
+                """.formatted(expected.id(), expected.updatedAt().toInstant().getLong(ChronoField.INSTANT_SECONDS)));
+
+        StackOverflowQuestionResponse result = stackOverflowClient
+                .checkQuestion(new ParsingResult.StackOverflowQuestion(Long.toString(expected.id())))
+                .orElseThrow();
+
+        assertThat(result).isEqualTo(expected);
+
+        RecordedRequest request = mockWebServer.takeRequest();
+        assertThat(request.getMethod()).isEqualTo("GET");
+        assertThat(request.getPath()).isEqualTo("/questions/%s?site=stackoverflow".formatted(expected.id()));
+    }
+
+    @Test
+    void returnsFirstQuestion() throws InterruptedException {
+        final var expectedResult = questions().findFirst().orElseThrow();
+
+        String items = questions()
+                .map(question -> "{\"question_id\": %s, \"last_activity_date\": %s}".formatted(
+                                question.id(),
+                                question.updatedAt().toInstant().getLong(ChronoField.INSTANT_SECONDS)
+                        )
+                )
+                .collect(Collectors.joining(", "));
+
+        mockApiResponse("""
+                  {
+                      "items": [%s]
+                  }
+                """.formatted(items));
+
+        StackOverflowQuestionResponse result = stackOverflowClient
+                .checkQuestion(new ParsingResult.StackOverflowQuestion(Long.toString(expectedResult.id())))
+                .orElseThrow();
+
+        assertThat(result).isEqualTo(expectedResult);
+
+        RecordedRequest request = mockWebServer.takeRequest();
+        assertThat(request.getMethod()).isEqualTo("GET");
+        assertThat(request.getPath()).isEqualTo("/questions/%s?site=stackoverflow".formatted(expectedResult.id()));
+    }
+
+    @Test
+    void returnsEmptyOnEmptyResponse() {
+        mockApiResponse("""
+                  {
+                      "items": []
+                  }
+                """);
+
+        assertThat(stackOverflowClient.checkQuestion(new ParsingResult.StackOverflowQuestion("1"))).isEmpty();
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {400, 500})
+    void returnsEmptyOnRequestFail(int code) {
+        mockWebServer.enqueue(new MockResponse().setResponseCode(code));
+
+        assertThat(stackOverflowClient.checkQuestion(new ParsingResult.StackOverflowQuestion("1"))).isEmpty();
+    }
+
+    private void mockApiResponse(String body) {
+        mockWebServer.enqueue(
+                new MockResponse()
+                        .setResponseCode(200)
+                        .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .setBody(body)
+        );
+    }
+
+    private static Stream<Arguments> provideValidResponses() {
+        return questions().map(Arguments::of);
+    }
+
+    private static Stream<StackOverflowQuestionResponse> questions() {
+        return Stream.of(
+                new StackOverflowQuestionResponse(1L, OffsetDateTime.ofInstant(Instant.ofEpochSecond(1662505559), ZoneOffset.UTC)),
+                new StackOverflowQuestionResponse(123L, OffsetDateTime.ofInstant(Instant.ofEpochSecond(1590400952), ZoneOffset.UTC))
+        );
+    }
+}
