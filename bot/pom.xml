@@ -9,7 +9,7 @@
     <name>bot</name>
 
     <parent>
-        <groupId>ru.tinkoff.edu.java</groupId>
+        <groupId>ru.tinkoff.edu</groupId>
         <artifactId>root</artifactId>
         <version>1.0</version>
     </parent>

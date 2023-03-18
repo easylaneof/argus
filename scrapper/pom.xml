@@ -9,7 +9,7 @@
     <name>scrapper</name>
 
     <parent>
-        <groupId>ru.tinkoff.edu.java</groupId>
+        <groupId>ru.tinkoff.edu</groupId>
         <artifactId>root</artifactId>
         <version>1.0</version>
     </parent>
@@ -64,8 +64,9 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
         <dependency>
-            <groupId>ru.tinkoff.edu.java</groupId>
+            <groupId>ru.tinkoff.edu</groupId>
             <artifactId>link-parser</artifactId>
             <version>1.0</version>
             <scope>compile</scope>
