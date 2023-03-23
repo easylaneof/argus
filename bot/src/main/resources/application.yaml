@@ -1,5 +1,7 @@
 app:
   test: Bot
+  bot:
+    apiKey: ${APP_TELEGRAM_KEY}
 
 springdoc:
   swagger-ui:
