@@ -12,15 +12,15 @@ import java.util.Optional;
 public class StackOverflowClientImpl implements StackOverflowClient {
     private static final String QUESTION_URI_FORMAT = "/questions/%s?site=stackoverflow";
 
-    private final WebClient stackOverflowClient;
+    private final WebClient client;
 
-    public StackOverflowClientImpl(WebClient stackOverflowClient) {
-        this.stackOverflowClient = stackOverflowClient;
+    public StackOverflowClientImpl(@StackOverflow WebClient client) {
+        this.client = client;
     }
 
     @Override
     public Optional<StackOverflowQuestionResponse> checkQuestion(ParsingResult.StackOverflowQuestion question) {
-        return stackOverflowClient
+        return client
                 .get()
                 .uri(QUESTION_URI_FORMAT.formatted(question.id()))
                 .retrieve()
