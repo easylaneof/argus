@@ -1,7 +1,7 @@
 app:
   test: Scrapper
   scheduler:
-    interval: 10
+    interval: 10s
 
 springdoc:
   swagger-ui:

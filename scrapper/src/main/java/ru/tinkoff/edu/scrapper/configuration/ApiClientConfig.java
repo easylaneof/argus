@@ -23,4 +23,9 @@ public class ApiClientConfig {
                 .baseUrl(apiClientProperties.stackOverflowApiUrl())
                 .build();
     }
+
+    @Bean
+    public long schedulerIntervalMs(ApplicationProperties properties) {
+        return properties.scheduler().interval().toMillis();
+    }
 }
