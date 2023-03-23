@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.tinkoff.edu.java.bot.dto.ApiErrorResponse;
 
+import java.util.Arrays;
 import java.util.List;
 
-// TODO: move to a shared module?
 @ControllerAdvice
 public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler({MissingRequestValueException.class})
@@ -24,7 +24,9 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
                         Integer.toString(detail.getStatus()),
                         detail.getTitle(),
                         exception.getMessage(),
-                        List.of() // TODO: not sure if we need to return stacktrace (maybe only in dev)
+                        Arrays.stream(exception.getStackTrace())
+                                .map(StackTraceElement::toString)
+                                .toList()
                 ),
                 HttpStatus.BAD_REQUEST
         );

@@ -10,9 +10,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import ru.tinkoff.edu.scrapper.dto.ApiErrorResponse;
 import ru.tinkoff.edu.scrapper.exception.LinkNotFoundException;
 
+import java.util.Arrays;
 import java.util.List;
 
-// TODO: move to a shared module?
 @ControllerAdvice
 public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler({LinkNotFoundException.class})
@@ -22,10 +22,12 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(
                 new ApiErrorResponse(
                         "Requested link %s not found".formatted(requestedLink),
-                        "0", // TODO: which code?
+                        "0",
                         "Link not found",
                         exception.getMessage(),
-                        List.of()
+                        Arrays.stream(exception.getStackTrace())
+                                .map(StackTraceElement::toString)
+                                .toList()
                 ),
                 HttpStatus.BAD_REQUEST
         );
@@ -41,7 +43,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
                         Integer.toString(detail.getStatus()),
                         detail.getTitle(),
                         exception.getMessage(),
-                        List.of() // TODO: not sure if we need to return stacktrace (maybe only in dev)
+                        List.of()
                 ),
                 HttpStatus.BAD_REQUEST
         );

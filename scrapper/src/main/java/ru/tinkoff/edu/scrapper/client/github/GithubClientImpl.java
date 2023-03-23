@@ -12,15 +12,15 @@ import java.util.Optional;
 public class GithubClientImpl implements GithubClient {
     private static final String REPOSITORY_URI_FORMAT = "/repos/%s/%s";
 
-    private final WebClient githubClient;
+    private final WebClient client;
 
-    public GithubClientImpl(WebClient githubClient) {
-        this.githubClient = githubClient;
+    public GithubClientImpl(@Github WebClient client) {
+        this.client = client;
     }
 
     @Override
     public Optional<GithubRepositoryResponse> checkRepository(ParsingResult.GithubRepository repository) {
-        return githubClient
+        return client
                 .get()
                 .uri(REPOSITORY_URI_FORMAT.formatted(repository.user(), repository.name()))
                 .retrieve()
