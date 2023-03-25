@@ -1,5 +1,6 @@
 package ru.tinkoff.edu.bot.bot.commandprocessor;
 
+import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.BaseRequest;
 import jakarta.annotation.PostConstruct;
@@ -18,12 +19,7 @@ public class CommandProcessorFacade {
     // FIXME?
     @PostConstruct
     private void init() {
-        helpCommandProcessor.setCommands(
-                commandProcessors
-                        .stream()
-                        .map(CommandProcessor::command)
-                        .toList()
-        );
+        helpCommandProcessor.setCommands(getCommands());
     }
 
     public Optional<BaseRequest<?, ?>> process(Update update) {
@@ -32,5 +28,12 @@ public class CommandProcessorFacade {
 
     private Optional<CommandProcessor<?, ?>> findRequiredProcessor(Update update) {
         return commandProcessors.stream().filter(p -> p.canProcess(update)).findAny();
+    }
+
+    public List<BotCommand> getCommands() {
+        return commandProcessors
+                .stream()
+                .map(CommandProcessor::command)
+                .toList();
     }
 }
