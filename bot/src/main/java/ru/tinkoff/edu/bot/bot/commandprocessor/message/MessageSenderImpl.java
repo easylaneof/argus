@@ -8,7 +8,6 @@ import freemarker.template.Template;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
-import ru.tinkoff.edu.bot.bot.commandprocessor.HelpCommandProcessor;
 
 import java.io.StringWriter;
 import java.io.Writer;

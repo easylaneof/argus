@@ -1,13 +1,13 @@
 package ru.tinkoff.edu.bot.bot.commandprocessor;
 
 
+import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.tinkoff.edu.bot.bot.Command;
 import ru.tinkoff.edu.bot.bot.commandprocessor.message.MessageSender;
 import ru.tinkoff.edu.bot.bot.commandprocessor.util.CommandParser;
 import ru.tinkoff.edu.bot.dto.Link;
@@ -26,8 +26,8 @@ public class TrackCommandProcessor implements CommandProcessor<SendMessage, Send
     private final LinkService linkService;
 
     @Override
-    public Command command() {
-        return new Command("track", "Add a new link to track: /track <link>");
+    public BotCommand command() {
+        return new BotCommand("track", "Add a new link to track: /track <link>");
     }
 
     @Override
