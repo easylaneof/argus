@@ -16,8 +16,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static ru.tinkoff.edu.parser.uri.UriTestUtils.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = LinkParserServiceTest.LinkParserServiceTestConfiguration.class)
-public class LinkParserServiceTest {
+@ContextConfiguration(classes = LinkParserServiceIT.LinkParserServiceTestConfiguration.class)
+public class LinkParserServiceIT {
     @TestConfiguration
     @ComponentScan("ru.tinkoff.edu.parser")
     static class LinkParserServiceTestConfiguration {
