@@ -32,7 +32,7 @@ class GithubClientTest {
 
     @ParameterizedTest
     @MethodSource("provideValidResponses")
-    void returnsValidResponse(GithubRepositoryResponse expected, String user, String repoName) throws InterruptedException {
+    void checkRepository__responseIsOk_returnsResponse(GithubRepositoryResponse expected, String user, String repoName) throws InterruptedException {
         mockApiResponse("""
                   {
                       "id": %s,
@@ -53,7 +53,7 @@ class GithubClientTest {
 
     @ParameterizedTest
     @ValueSource(ints = {400, 500})
-    void returnsEmptyOnRequestFail(int code) {
+    void checkRepository__responseIsError_returnsEmpty(int code) {
         mockWebServer.enqueue(new MockResponse().setResponseCode(code));
 
         assertThat(githubClient.checkRepository(new ParsingResult.GithubRepository("user", "1"))).isEmpty();

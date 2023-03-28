@@ -35,7 +35,7 @@ class StackOverflowClientTest {
 
     @ParameterizedTest
     @MethodSource("provideValidResponses")
-    void returnsValidResponse(StackOverflowQuestionResponse expected) throws InterruptedException {
+    void checkQuestion__responseIsOk_returnsResponse(StackOverflowQuestionResponse expected) throws InterruptedException {
         mockApiResponse("""
                   {
                       "items": [{"question_id": %s, "last_activity_date": %s}]
@@ -54,7 +54,7 @@ class StackOverflowClientTest {
     }
 
     @Test
-    void returnsFirstQuestion() throws InterruptedException {
+    void checkQuestion__responseAreSeveralQuestions_returnsFirstQuestion() throws InterruptedException {
         final var expectedResult = questions().findFirst().orElseThrow();
 
         String items = questions()
@@ -83,7 +83,7 @@ class StackOverflowClientTest {
     }
 
     @Test
-    void returnsEmptyOnEmptyResponse() {
+    void checkQuestion__responseIsEmpty_returnsEmpty() {
         mockApiResponse("""
                   {
                       "items": []
@@ -95,7 +95,7 @@ class StackOverflowClientTest {
 
     @ParameterizedTest
     @ValueSource(ints = {400, 500})
-    void returnsEmptyOnRequestFail(int code) {
+    void checkQuestion__responseIsError_returnsEmpty(int code) {
         mockWebServer.enqueue(new MockResponse().setResponseCode(code));
 
         assertThat(stackOverflowClient.checkQuestion(new ParsingResult.StackOverflowQuestion("1"))).isEmpty();

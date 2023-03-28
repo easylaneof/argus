@@ -21,15 +21,16 @@ class CommandParserTest {
 
     @ParameterizedTest
     @MethodSource("provideCommands")
-    void returnsValidCommandAndArguments(String message, String command, String arguments) {
-        String result = commandParser.parseCommandArgument(command, message).orElseThrow();
-
-        assertThat(result).isEqualTo(arguments);
+    void parseCommandArgument__messageIsValid_returnsArguments(String message, String command, String arguments) {
+        assertThat(commandParser
+                .parseCommandArgument(command, message)
+                .orElseThrow()
+        ).isEqualTo(arguments);
     }
 
     @ParameterizedTest
     @MethodSource("provideInvalidMessage")
-    void returnsInvalidCommandAndArguments(String message, String command) {
+    void parseCommandArgument__messageIsInvalid_returnsEmpty(String message, String command) {
         assertThat(commandParser.parseCommandArgument(command, message)).isEmpty();
     }
 
