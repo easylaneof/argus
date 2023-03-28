@@ -2,6 +2,8 @@ app:
   test: Scrapper
   scheduler:
     interval: 10s
+  api:
+    github-api-url: asd
 
 springdoc:
   swagger-ui:
