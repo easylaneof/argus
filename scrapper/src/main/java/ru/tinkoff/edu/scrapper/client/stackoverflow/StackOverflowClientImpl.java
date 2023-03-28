@@ -1,6 +1,5 @@
 package ru.tinkoff.edu.scrapper.client.stackoverflow;
 
-import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
@@ -8,7 +7,6 @@ import ru.tinkoff.edu.parser.ParsingResult;
 
 import java.util.Optional;
 
-@Component
 public class StackOverflowClientImpl implements StackOverflowClient {
     private static final String QUESTION_URI_FORMAT = "/questions/%s?site=stackoverflow";
 

@@ -9,12 +9,10 @@ import ru.tinkoff.edu.scrapper.dto.LinkResponse;
 @RestController
 public class TelegramChatController {
     @PostMapping("/tg-chat/{id}")
-    public LinkResponse registerChat(@PathVariable long id) {
-        return new LinkResponse(0, "");
+    public void registerChat(@PathVariable long id) {
     }
 
     @DeleteMapping("/tg-chat/{id}")
-    public LinkResponse deleteChat(@PathVariable long id) {
-        return new LinkResponse(0, "");
+    public void deleteChat(@PathVariable long id) {
     }
 }

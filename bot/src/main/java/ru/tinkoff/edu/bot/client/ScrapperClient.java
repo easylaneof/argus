@@ -1,0 +1,18 @@
+package ru.tinkoff.edu.bot.client;
+
+import ru.tinkoff.edu.bot.dto.LinkResponse;
+import ru.tinkoff.edu.bot.dto.ListLinkResponse;
+
+import java.util.Optional;
+
+public interface ScrapperClient {
+    boolean registerChat(long chatId);
+
+    boolean deleteChat(long chatId);
+
+    Optional<ListLinkResponse> getAllLinks(long chatId);
+
+    Optional<LinkResponse> addLink(long chatId, String url);
+
+    Optional<LinkResponse> removeLink(long chatId, String url);
+}
