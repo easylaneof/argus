@@ -10,7 +10,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.web.reactive.function.client.WebClient;
 import ru.tinkoff.edu.parser.ParsingResult;
 
 import java.time.Instant;
@@ -28,12 +27,7 @@ class GithubClientTest {
     @BeforeEach
     void setup() {
         mockWebServer = new MockWebServer();
-        githubClient = new GithubClientImpl(
-                WebClient
-                        .builder()
-                        .baseUrl(mockWebServer.url("/").url().toString())
-                        .build()
-        );
+        githubClient = new GithubClientImpl(mockWebServer.url("/").url().toString());
     }
 
     @ParameterizedTest

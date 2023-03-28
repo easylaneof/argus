@@ -12,10 +12,16 @@ import java.util.Optional;
 public class StackOverflowClientImpl implements StackOverflowClient {
     private static final String QUESTION_URI_FORMAT = "/questions/%s?site=stackoverflow";
 
+    private static final String DEFAULT_URL = "https://api.stackexchange.com/2.3";
+
     private final WebClient client;
 
-    public StackOverflowClientImpl(@StackOverflow WebClient client) {
-        this.client = client;
+    public StackOverflowClientImpl(String url) {
+        this.client = WebClient.create(url);
+    }
+
+    public StackOverflowClientImpl() {
+        this.client = WebClient.create(DEFAULT_URL);
     }
 
     @Override

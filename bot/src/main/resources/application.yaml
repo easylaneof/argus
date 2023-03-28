@@ -2,7 +2,12 @@ app:
   test: Bot
   bot:
     apiKey: ${APP_TELEGRAM_KEY}
+  api:
+    scrapperApiUrl: 'http://localhost:8080'
 
 springdoc:
   swagger-ui:
     path: /swagger-ui
+
+server:
+  port: 8081
