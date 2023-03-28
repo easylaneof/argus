@@ -20,7 +20,7 @@ public class LinksController {
 
     @PostMapping("/links")
     public LinkResponse addLink(@RequestHeader(TG_CHAT_ID_HEADER) long chatId, @RequestBody AddLinkRequest addLinkRequest) {
-        return new LinkResponse(0, addLinkRequest.link());
+        return new LinkResponse(0L, addLinkRequest.link());
     }
 
     @DeleteMapping("/links")
@@ -29,6 +29,6 @@ public class LinksController {
             throw new LinkNotFoundException(removeLinkRequest);
         }
 
-        return new LinkResponse(0, removeLinkRequest.link());
+        return new LinkResponse(0L, removeLinkRequest.link());
     }
 }

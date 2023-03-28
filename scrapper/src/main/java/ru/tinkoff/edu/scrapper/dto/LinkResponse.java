@@ -1,4 +1,4 @@
 package ru.tinkoff.edu.scrapper.dto;
 
-public record LinkResponse(int id, String url) {
+public record LinkResponse(Long id, String url) {
 }

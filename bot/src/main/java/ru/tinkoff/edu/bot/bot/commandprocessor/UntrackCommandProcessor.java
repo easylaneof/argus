@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.bot.bot.commandprocessor.message.MessageSender;
 import ru.tinkoff.edu.bot.bot.commandprocessor.util.CommandParser;
-import ru.tinkoff.edu.bot.dto.Link;
+import ru.tinkoff.edu.bot.dto.LinkResponse;
 import ru.tinkoff.edu.bot.service.LinkService;
 
 import java.util.Optional;
@@ -39,7 +39,7 @@ public class UntrackCommandProcessor implements CommandProcessor<SendMessage, Se
 
         String link = maybeLink.get();
 
-        Optional<Link> result = linkService.untrackLink(update.message().chat().id(), link);
+        Optional<LinkResponse> result = linkService.untrackLink(update.message().chat().id(), link);
 
         if (result.isPresent()) {
             log.info("User with id {} untracked link {}", update.message().from().id(), link);

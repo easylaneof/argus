@@ -7,7 +7,7 @@ import com.pengrad.telegrambot.response.SendResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.bot.bot.commandprocessor.message.MessageSender;
-import ru.tinkoff.edu.bot.dto.Link;
+import ru.tinkoff.edu.bot.dto.LinkResponse;
 import ru.tinkoff.edu.bot.service.LinkService;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class ListCommandProcessor implements CommandProcessor<SendMessage, SendR
 
     @Override
     public SendMessage process(Update update) {
-        List<Link> links = linkService.getAllLinks(update.message().chat().id());
+        List<LinkResponse> links = linkService.getAllLinks(update.message().chat().id());
 
         return messageSender.sendTemplate(update, "list.ftlh", Map.of("links", links));
     }
