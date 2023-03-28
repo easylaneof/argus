@@ -6,19 +6,17 @@ import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.bot.bot.commandprocessor.CommandProcessorFacade;
 
 import java.util.List;
 
-@Component
 @Slf4j
 @RequiredArgsConstructor
 public class BotUpdatesDispatcher implements UpdatesListener {
-    @Setter
-    private TelegramBot bot;
+    static String HELP_MESSAGE = "Unexpected message. Try using /help";
+
+    private final TelegramBot bot;
 
     private final CommandProcessorFacade commandProcessorFacade;
 
@@ -46,7 +44,7 @@ public class BotUpdatesDispatcher implements UpdatesListener {
     }
 
     private SendMessage unexpectedMessage(Update update) {
-        return new SendMessage(update.message().chat().id(), "Unexpected message. Try using /help");
+        return new SendMessage(update.message().chat().id(), HELP_MESSAGE);
     }
 
     public List<BotCommand> getCommands() {

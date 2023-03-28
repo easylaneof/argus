@@ -7,21 +7,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.tinkoff.edu.bot.bot.BotUpdatesDispatcher;
+import ru.tinkoff.edu.bot.bot.commandprocessor.CommandProcessorFacade;
 
 @Configuration
 @RequiredArgsConstructor
 public class BotConfiguration {
-    private final ApplicationConfig applicationConfig;
-    private final BotUpdatesDispatcher botUpdatesDispatcher;
+    private final ApplicationProperties applicationProperties;
 
     @Bean
-    TelegramBot telegramBot() {
-        TelegramBot bot = new TelegramBot(applicationConfig.bot().apiKey());
+    TelegramBot telegramBot(CommandProcessorFacade commandProcessorFacade) {
+        TelegramBot bot = new TelegramBot(applicationProperties.bot().apiKey());
+
+        var botUpdatesDispatcher = new BotUpdatesDispatcher(bot, commandProcessorFacade);
+        bot.setUpdatesListener(botUpdatesDispatcher);
 
         bot.execute(new SetMyCommands(botUpdatesDispatcher.getCommands().toArray(new BotCommand[0])));
-
-        botUpdatesDispatcher.setBot(bot); // FIXME circular dep :(
-        bot.setUpdatesListener(botUpdatesDispatcher);
 
         return bot;
     }
