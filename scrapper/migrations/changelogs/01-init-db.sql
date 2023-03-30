@@ -8,8 +8,12 @@ CREATE TABLE chat (
 --changeset easylaneof:add-link-table
 CREATE TABLE link (
     id BIGSERIAL PRIMARY KEY,
-    url VARCHAR(2048) NOT NULL, -- https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
-    chat_id BIGSERIAL REFERENCES chat(id),
+    url VARCHAR(2048) NOT NULL UNIQUE, -- https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
+    updated_at timestamptz NOT NULL
+);
 
-    UNIQUE (chat_id, url)
+--changeset easylaneof:add-chat_link-table
+CREATE TABLE chat_link (
+    chat_id BIGSERIAL REFERENCES chat(id),
+    link_id BIGSERIAL REFERENCES link(id)
 );
