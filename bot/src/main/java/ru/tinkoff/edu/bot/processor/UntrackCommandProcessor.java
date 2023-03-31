@@ -24,7 +24,7 @@ public class UntrackCommandProcessor implements CommandProcessor<SendMessage, Se
 
     @Override
     public BotCommand command() {
-        return new BotCommand("untrack", "Untrack a link: /untrack <link>");
+        return Command.UNTRACK.toApiCommand();
     }
 
     @Override

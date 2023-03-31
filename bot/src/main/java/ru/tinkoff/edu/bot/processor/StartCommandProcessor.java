@@ -17,7 +17,7 @@ public class StartCommandProcessor implements CommandProcessor<SendMessage, Send
 
     @Override
     public BotCommand command() {
-        return new BotCommand("start", "Register a new user");
+        return Command.START.toApiCommand();
     }
 
     @Override

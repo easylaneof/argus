@@ -3,15 +3,16 @@ package ru.tinkoff.edu.bot.processor.util;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import ru.tinkoff.edu.bot.processor.Command;
 
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class CommandParserTest {
-    private static final String TRACK = "track";
-    private static final String UNTRACK = "untrack";
-    private static final String HELP = "help";
+    private static final String TRACK = Command.TRACK.getCommand();
+    private static final String UNTRACK = Command.UNTRACK.getCommand();
+    private static final String HELP = Command.HELP.getCommand();
     private static final String TRACK_COMMAND = "/" + TRACK;
     private static final String UNTRACK_COMMAND = "/" + UNTRACK;
     private static final String HELP_COMMAND = "/" + HELP;
