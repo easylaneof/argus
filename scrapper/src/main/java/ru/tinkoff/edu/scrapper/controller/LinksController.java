@@ -7,6 +7,7 @@ import ru.tinkoff.edu.scrapper.dto.ListLinkResponse;
 import ru.tinkoff.edu.scrapper.dto.RemoveLinkRequest;
 import ru.tinkoff.edu.scrapper.exception.LinkNotFoundException;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -20,7 +21,7 @@ public class LinksController {
 
     @PostMapping("/links")
     public LinkResponse addLink(@RequestHeader(TG_CHAT_ID_HEADER) long chatId, @RequestBody AddLinkRequest addLinkRequest) {
-        return new LinkResponse(0L, addLinkRequest.link());
+        return new LinkResponse(0L, URI.create(addLinkRequest.link()));
     }
 
     @DeleteMapping("/links")
@@ -29,6 +30,6 @@ public class LinksController {
             throw new LinkNotFoundException(removeLinkRequest);
         }
 
-        return new LinkResponse(0L, removeLinkRequest.link());
+        return new LinkResponse(0L, URI.create(removeLinkRequest.link()));
     }
 }
