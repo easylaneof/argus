@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.bot.bot;
+package ru.tinkoff.edu.bot;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
@@ -7,7 +7,7 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.tinkoff.edu.bot.bot.commandprocessor.CommandProcessorFacade;
+import ru.tinkoff.edu.bot.processor.CommandProcessorFacade;
 
 import java.util.List;
 

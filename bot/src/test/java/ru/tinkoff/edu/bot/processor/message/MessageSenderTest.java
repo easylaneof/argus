@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.bot.bot.commandprocessor.message;
+package ru.tinkoff.edu.bot.processor.message;
 
 import com.github.javafaker.Faker;
 import com.google.gson.Gson;

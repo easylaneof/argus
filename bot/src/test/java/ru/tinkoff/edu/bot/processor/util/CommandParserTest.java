@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.bot.bot.commandprocessor.util;
+package ru.tinkoff.edu.bot.processor.util;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

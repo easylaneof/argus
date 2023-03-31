@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.bot.bot.commandprocessor.util;
+package ru.tinkoff.edu.bot.processor.util;
 
 import java.util.Optional;
 
