@@ -22,7 +22,7 @@ public class ListCommandProcessor implements CommandProcessor<SendMessage, SendR
 
     @Override
     public BotCommand command() {
-        return new BotCommand("list", "List of your links");
+        return Command.LIST.toApiCommand();
     }
 
     @Override

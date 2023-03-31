@@ -25,7 +25,7 @@ public class HelpCommandProcessor implements CommandProcessor<SendMessage, SendR
 
     @Override
     public BotCommand command() {
-        return new BotCommand("help", "Show this help");
+        return Command.HELP.toApiCommand();
     }
 
     @Override

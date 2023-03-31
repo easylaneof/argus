@@ -27,7 +27,7 @@ public class TrackCommandProcessor implements CommandProcessor<SendMessage, Send
 
     @Override
     public BotCommand command() {
-        return new BotCommand("track", "Add a new link to track: /track <link>");
+        return Command.TRACK.toApiCommand();
     }
 
     @Override
