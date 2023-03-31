@@ -6,8 +6,8 @@ import com.pengrad.telegrambot.request.SetMyCommands;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.tinkoff.edu.bot.bot.BotUpdatesDispatcher;
-import ru.tinkoff.edu.bot.bot.commandprocessor.CommandProcessorFacade;
+import ru.tinkoff.edu.bot.BotUpdatesDispatcher;
+import ru.tinkoff.edu.bot.processor.CommandProcessorFacade;
 
 @Configuration
 @RequiredArgsConstructor

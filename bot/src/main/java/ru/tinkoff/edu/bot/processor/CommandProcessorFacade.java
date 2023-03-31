@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.bot.bot.commandprocessor;
+package ru.tinkoff.edu.bot.processor;
 
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;

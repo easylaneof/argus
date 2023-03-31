@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.bot.bot.commandprocessor;
+package ru.tinkoff.edu.bot.processor;
 
 import com.google.gson.Gson;
 import com.pengrad.telegrambot.model.Update;
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.tinkoff.edu.bot.bot.commandprocessor.message.MessageSender;
+import ru.tinkoff.edu.bot.processor.message.MessageSender;
 import ru.tinkoff.edu.bot.dto.LinkResponse;
 import ru.tinkoff.edu.bot.service.LinkService;
 

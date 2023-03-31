@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.bot.bot;
+package ru.tinkoff.edu.bot;
 
 import com.google.gson.Gson;
 import com.pengrad.telegrambot.TelegramBot;
@@ -13,7 +13,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.tinkoff.edu.bot.bot.commandprocessor.CommandProcessorFacade;
+import ru.tinkoff.edu.bot.processor.CommandProcessorFacade;
 
 import java.util.List;
 import java.util.Optional;
