@@ -14,6 +14,6 @@ CREATE TABLE link (
 
 --changeset easylaneof:add-chat_link-table
 CREATE TABLE chat_link (
-    chat_id BIGSERIAL REFERENCES chat(id),
-    link_id BIGSERIAL REFERENCES link(id)
+    chat_id BIGINT REFERENCES chat(id) NOT NULL,
+    link_id BIGINT REFERENCES link(id) NOT NULL
 );
