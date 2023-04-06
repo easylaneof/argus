@@ -2,7 +2,7 @@
 
 --changeset easylaneof:add-chat-table
 CREATE TABLE chat (
-    id BIGSERIAL PRIMARY KEY
+    id BIGINT PRIMARY KEY
 );
 
 --changeset easylaneof:add-link-table
