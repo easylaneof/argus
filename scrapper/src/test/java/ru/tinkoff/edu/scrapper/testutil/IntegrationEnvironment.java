@@ -6,14 +6,33 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.DirectoryResourceAccessor;
+import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-import java.io.*;
+import javax.sql.DataSource;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class IntegrationEnvironment {
+@ContextConfiguration(classes = IntegrationEnvironment.IntegrationEnvironmentConfiguration.class)
+public abstract class IntegrationEnvironment {
+    @Configuration
+    static class IntegrationEnvironmentConfiguration {
+        @Bean
+        public DataSource testDataSource() {
+            return DataSourceBuilder.create()
+                    .url(POSTGRES_CONTAINER.getJdbcUrl())
+                    .username(POSTGRES_CONTAINER.getUsername())
+                    .password(POSTGRES_CONTAINER.getPassword())
+                    .build();
+        }
+    }
+
     public static PostgreSQLContainer<?> POSTGRES_CONTAINER;
 
     private static final Path PATH_TO_CHANGE_LOG = new File("migrations").toPath();
