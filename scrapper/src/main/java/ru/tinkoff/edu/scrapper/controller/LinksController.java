@@ -1,35 +1,39 @@
 package ru.tinkoff.edu.scrapper.controller;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.tinkoff.edu.scrapper.dto.AddLinkRequest;
 import ru.tinkoff.edu.scrapper.dto.LinkResponse;
 import ru.tinkoff.edu.scrapper.dto.ListLinkResponse;
 import ru.tinkoff.edu.scrapper.dto.RemoveLinkRequest;
-import ru.tinkoff.edu.scrapper.exception.LinkNotFoundException;
+import ru.tinkoff.edu.scrapper.service.LinkService;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
+@Slf4j
 public class LinksController {
+    private final LinkService linkService;
+
     private static final String TG_CHAT_ID_HEADER = "Tg-Chat-Id";
 
     @GetMapping("/links")
     public ListLinkResponse getAllLinks(@RequestHeader(TG_CHAT_ID_HEADER) long chatId) {
-        return new ListLinkResponse(List.of(), 0);
+        log.info("List all links of chat {}", chatId);
+        return ListLinkResponse.fromEntity(linkService.findChatLinks(chatId));
     }
 
     @PostMapping("/links")
     public LinkResponse addLink(@RequestHeader(TG_CHAT_ID_HEADER) long chatId, @RequestBody AddLinkRequest addLinkRequest) {
-        return new LinkResponse(0L, URI.create(addLinkRequest.link()));
+        log.info("Adding new link {} to chat {}", addLinkRequest, chatId);
+        return LinkResponse.fromEntity(linkService.add(chatId, URI.create(addLinkRequest.link())));
     }
 
     @DeleteMapping("/links")
     public LinkResponse removeLink(@RequestHeader(TG_CHAT_ID_HEADER) long chatId, @RequestBody RemoveLinkRequest removeLinkRequest) {
-        if (chatId == -1) { // stub
-            throw new LinkNotFoundException(removeLinkRequest);
-        }
-
-        return new LinkResponse(0L, URI.create(removeLinkRequest.link()));
+        log.info("Removing link {} from chat {}", removeLinkRequest, chatId);
+        return LinkResponse.fromEntity(linkService.remove(chatId, URI.create(removeLinkRequest.link())));
     }
 }
