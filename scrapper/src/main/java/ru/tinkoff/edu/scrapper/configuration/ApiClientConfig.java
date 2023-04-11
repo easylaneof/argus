@@ -30,4 +30,9 @@ public class ApiClientConfig {
     public long schedulerIntervalMs(ApplicationProperties properties) {
         return properties.scheduler().interval().toMillis();
     }
+
+    @Bean
+    public int updateBatchSize(ApplicationProperties properties) {
+        return properties.scheduler().updateBatchSize();
+    }
 }

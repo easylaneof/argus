@@ -11,7 +11,7 @@ import java.time.Duration;
 @Validated
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
 public record ApplicationProperties(@NotNull String test, Scheduler scheduler, Api api) {
-    record Scheduler(Duration interval) {
+    public record Scheduler(Duration interval, int updateBatchSize) {
     }
 
     public record Api(@DefaultValue("https://api.github.com") String githubApiUrl,
