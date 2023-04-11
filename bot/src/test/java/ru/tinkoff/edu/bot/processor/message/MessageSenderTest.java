@@ -4,13 +4,11 @@ import com.github.javafaker.Faker;
 import com.google.gson.Gson;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import freemarker.template.Configuration;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import ru.tinkoff.edu.bot.configuration.TestMessageSender;
 import ru.tinkoff.edu.bot.dto.LinkResponse;
 
-import java.io.File;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -24,24 +22,7 @@ class MessageSenderTest {
     private static final Faker faker = new Faker(new Random(42));
     private static final Gson gson = new Gson();
 
-    static Configuration templateResolver;
-
-    MessageSender messageSender = new MessageSenderImpl(templateResolver);
-
-    @BeforeAll
-    @SneakyThrows
-    static void setUp() {
-        templateResolver = new Configuration(Configuration.VERSION_2_3_31);
-
-        File templatesDir = new File(MessageSender.class
-                .getClassLoader()
-                .getResource("templates")
-                .getFile()
-        );
-
-        templateResolver.setDirectoryForTemplateLoading(templatesDir);
-        templateResolver.setDefaultEncoding("UTF-8");
-    }
+    MessageSender messageSender = TestMessageSender.getMessageSender();
 
     @Test
     void send__returnsValidMessage() {
