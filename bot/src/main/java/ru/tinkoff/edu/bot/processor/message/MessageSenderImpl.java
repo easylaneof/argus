@@ -1,6 +1,5 @@
 package ru.tinkoff.edu.bot.processor.message;
 
-import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import freemarker.template.Configuration;
@@ -19,16 +18,16 @@ public final class MessageSenderImpl implements MessageSender {
     private final Configuration templateResolver;
 
     @Override
-    public SendMessage send(Update update, String text) {
-        return new SendMessage(update.message().chat().id(), text);
+    public SendMessage send(long chatId, String text) {
+        return new SendMessage(chatId, text);
     }
 
     @SneakyThrows
-    public SendMessage sendTemplate(Update update, String templateName, Map<String, Object> data) {
+    public SendMessage sendTemplate(long chatId, String templateName, Map<String, ?> data) {
         Template template = templateResolver.getTemplate(templateName);
         Writer result = new StringWriter();
         template.process(data, result);
-        return new SendMessage(update.message().chat().id(), result.toString())
+        return new SendMessage(chatId, result.toString())
                 .parseMode(ParseMode.HTML);
     }
 }
