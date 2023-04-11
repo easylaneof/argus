@@ -5,7 +5,9 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Mono;
 import ru.tinkoff.edu.parser.ParsingResult;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class StackOverflowClientImpl implements StackOverflowClient {
     private static final String QUESTION_URI_FORMAT = "/questions/%s?site=stackoverflow";
@@ -23,15 +25,15 @@ public class StackOverflowClientImpl implements StackOverflowClient {
     }
 
     @Override
-    public Optional<StackOverflowQuestionResponse> checkQuestion(ParsingResult.StackOverflowQuestion question) {
+    public Optional<StackOverflowQuestionsResponse> checkQuestions(List<ParsingResult.StackOverflowQuestion> questions) {
+        String ids = questions.stream().map(ParsingResult.StackOverflowQuestion::id).collect(Collectors.joining(";"));
+
         return client
                 .get()
-                .uri(QUESTION_URI_FORMAT.formatted(question.id()))
+                .uri(QUESTION_URI_FORMAT.formatted(ids))
                 .retrieve()
                 .bodyToMono(StackOverflowQuestionsResponse.class)
                 .onErrorResume(WebClientResponseException.class, (ex) -> Mono.empty())
-                .blockOptional()
-                .filter(questions -> !questions.items().isEmpty())
-                .map(questions -> questions.items().get(0));
+                .blockOptional();
     }
 }
