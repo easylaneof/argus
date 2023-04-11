@@ -1,5 +1,6 @@
 package ru.tinkoff.edu.scrapper.repository.jdbc;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -9,6 +10,7 @@ import ru.tinkoff.edu.scrapper.repository.LinkRepository;
 import ru.tinkoff.edu.scrapper.testutil.JdbcRepositoryEnvironment;
 
 import java.net.URI;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -117,37 +119,82 @@ class LinkRepositoryTest extends JdbcRepositoryEnvironment {
         assertThat(linkRepository.count()).isEqualTo(2);
     }
 
-    @Test
-    void save__dbIsEmpty_addsToDb() {
-        Link link = makeTestLink();
+    @Nested
+    class SaveIdIsNull {
+        @Test
+        void save__dbIsEmpty_addsToDb() {
+            Link link = makeTestLink();
 
-        linkRepository.save(link);
+            linkRepository.save(link);
 
-        Link foundLink = linkRepository.findAll().get(0);
+            Link foundLink = linkRepository.findAll().get(0);
 
-        assertThat(foundLink.getId()).isEqualTo(link.getId());
-        assertThat(foundLink.getUrl()).isEqualTo(link.getUrl());
+            assertThat(foundLink.getId()).isEqualTo(link.getId());
+            assertThat(foundLink.getUrl()).isEqualTo(link.getUrl());
+        }
+
+        @Test
+        void save__dbAlreadyHasLink_throws() {
+            Link link = makeTestLink();
+
+            linkRepository.save(link);
+
+            assertThatThrownBy(() -> linkRepository.save(makeTestLink()))
+                    .isInstanceOf(DataAccessException.class);
+        }
+
+        @Test
+        @Sql("/sql/add_links.sql")
+        void save__dbHasLinks_addsToDb() {
+            Link link = makeTestLink();
+
+            linkRepository.save(link);
+
+            assertThat(link.getId()).isNotNull();
+            assertThat(linkRepository.count()).isEqualTo(3);
+        }
     }
 
-    @Test
-    void save__dbAlreadyHasLink_throws() {
-        Link link = makeTestLink();
+    @Nested
+    class SaveIdIsNotNull {
+        @Test
+        void save__idIsUnknownAndDbIsEmpty_throws() {
+            Link link = makeTestLink();
+            link.setId(UNKNOWN_ID);
 
-        linkRepository.save(link);
+            assertThatThrownBy(() -> linkRepository.save(link))
+                    .isInstanceOf(DataAccessException.class);
+        }
 
-        assertThatThrownBy(() -> linkRepository.save(makeTestLink()))
-                .isInstanceOf(DataAccessException.class);
-    }
+        @Test
+        @Sql("/sql/add_links.sql")
+        void save__idIsUnknownAndDsIsFull_throws() {
+            Link link = makeTestLink();
+            link.setId(UNKNOWN_ID);
 
-    @Test
-    @Sql("/sql/add_links.sql")
-    void save__dbHasLinks_addsToDb() {
-        Link link = makeTestLink();
+            assertThatThrownBy(() -> linkRepository.save(link))
+                    .isInstanceOf(DataAccessException.class);
+        }
 
-        linkRepository.save(link);
+        @Test
+        @Sql("/sql/add_links.sql")
+        void save__idIsKnownAndDsIsFull_updates() {
+            // arrange
+            Link link = linkRepository.findAll().get(0);
+            long id = link.getId();
 
-        assertThat(link.getId()).isNotNull();
-        assertThat(linkRepository.count()).isEqualTo(3);
+            assertThat(link.getLastCheckedAt()).isNull();
+
+            link.setLastCheckedAt(OffsetDateTime.now());
+
+            // act
+            linkRepository.save(link);
+
+            //assert
+            link = linkRepository.findById(id).orElseThrow();
+
+            assertThat(link.getLastCheckedAt()).isNotNull();
+        }
     }
 
     @Test
