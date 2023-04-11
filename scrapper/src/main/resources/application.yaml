@@ -3,7 +3,16 @@ app:
   scheduler:
     interval: 10s
   api:
-    github-api-url: asd
+    github-api-url: https://api.github.com
+    stack-overflow-api-url: https://api.stackexchange.com/2.
+
+spring:
+  liquibase:
+    enabled: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/scrapper
+    password: postgres
+    username: postgres
 
 springdoc:
   swagger-ui:
