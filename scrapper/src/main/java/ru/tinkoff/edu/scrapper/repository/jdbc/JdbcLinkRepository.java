@@ -25,20 +25,27 @@ public class JdbcLinkRepository implements LinkRepository {
 
     private static final String UPDATE_SQL = """
             UPDATE link
-            SET last_checked_at = ?
+            SET last_checked_at = ?, updated_at = ?
             WHERE id = ?
             """;
 
     private static final String FIND_ALL_SQL = """
-            SELECT id, url, last_checked_at FROM link;
+            SELECT id, url, last_checked_at, updated_at FROM link;
+            """;
+
+    private static final String FIND_LEAST_RECENTLY_CHECKED_SQL = """
+            SELECT id, url, last_checked_at, updated_at
+            FROM link
+            ORDER BY last_checked_at NULLS FIRST
+            LIMIT ?
             """;
 
     private static final String FIND_BY_ID_SQL = """
-            SELECT id, url, last_checked_at FROM link WHERE id = ?
+            SELECT id, url, last_checked_at, updated_at FROM link WHERE id = ?
             """;
 
     private static final String FIND_BY_URL_SQL = """
-            SELECT id, url, last_checked_at FROM link WHERE url = ?
+            SELECT id, url, last_checked_at, updated_at FROM link WHERE url = ?
             """;
 
     private static final String COUNT_SQL = """
@@ -54,17 +61,18 @@ public class JdbcLinkRepository implements LinkRepository {
               INSERT INTO link(url)
               VALUES (?)
               ON CONFLICT (url) DO NOTHING
-              RETURNING id, url, last_checked_at
+              RETURNING id, url, last_checked_at, updated_at
             )
-            SELECT id, url, last_checked_at FROM insert
+            SELECT id, url, last_checked_at, updated_at FROM insert
             UNION
-            SELECT id, url, last_checked_at FROM link
+            SELECT id, url, last_checked_at, updated_at FROM link
             WHERE url = ?;
             """;
     public static final RowMapper<Link> LINK_MAPPER = (ResultSet rs, int rowNum) -> Link.builder()
             .id(rs.getLong("id"))
             .url(URI.create(rs.getString("url")))
             .lastCheckedAt(rs.getObject("last_checked_at", OffsetDateTime.class))
+            .updatedAt(rs.getObject("updated_at", OffsetDateTime.class))
             .build();
 
     private final JdbcTemplate jdbcTemplate;
@@ -74,7 +82,7 @@ public class JdbcLinkRepository implements LinkRepository {
         if (entity.getId() != null) {
             long id = entity.getId();
 
-            int rows = jdbcTemplate.update(UPDATE_SQL, entity.getLastCheckedAt(), id);
+            int rows = jdbcTemplate.update(UPDATE_SQL, entity.getLastCheckedAt(), entity.getUpdatedAt(), id);
 
             if (rows == 0) {
                 throw new EmptyResultDataAccessException("Expected link with id %s to be stored in db".formatted(id), 0);
@@ -88,6 +96,11 @@ public class JdbcLinkRepository implements LinkRepository {
     @Override
     public List<Link> findAll() {
         return jdbcTemplate.query(FIND_ALL_SQL, LINK_MAPPER);
+    }
+
+    @Override
+    public List<Link> findLeastRecentlyChecked(int batchSize) {
+        return jdbcTemplate.query(FIND_LEAST_RECENTLY_CHECKED_SQL, LINK_MAPPER, batchSize);
     }
 
     @Override
