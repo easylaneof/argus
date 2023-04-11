@@ -1,6 +1,7 @@
 package ru.tinkoff.edu.scrapper.repository.jdbc;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -17,21 +18,27 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class JdbcLinkRepository implements LinkRepository {
     private static final String SAVE_SQL = """
-            INSERT INTO link(url, updated_at)
-            VALUES (?, ?)
+            INSERT INTO link(url)
+            VALUES (?)
             RETURNING id
             """;
 
+    private static final String UPDATE_SQL = """
+            UPDATE link
+            SET last_checked_at = ?
+            WHERE id = ?
+            """;
+
     private static final String FIND_ALL_SQL = """
-            SELECT id, url, updated_at FROM link;
+            SELECT id, url, last_checked_at FROM link;
             """;
 
     private static final String FIND_BY_ID_SQL = """
-            SELECT id, url, updated_at FROM link WHERE id = ?
+            SELECT id, url, last_checked_at FROM link WHERE id = ?
             """;
 
-    private static final String FIND_BY_URL = """
-            SELECT id, url, updated_at FROM link WHERE url = ?
+    private static final String FIND_BY_URL_SQL = """
+            SELECT id, url, last_checked_at FROM link WHERE url = ?
             """;
 
     private static final String COUNT_SQL = """
@@ -44,30 +51,38 @@ public class JdbcLinkRepository implements LinkRepository {
 
     private static final String FIND_OR_CREATE_SQL = """
             WITH insert AS (
-              INSERT INTO link(url, updated_at)
-              VALUES (?, ?)
+              INSERT INTO link(url)
+              VALUES (?)
               ON CONFLICT (url) DO NOTHING
-              RETURNING id
+              RETURNING id, url, last_checked_at
             )
-            SELECT id FROM insert
+            SELECT id, url, last_checked_at FROM insert
             UNION
-            SELECT id FROM link
+            SELECT id, url, last_checked_at FROM link
             WHERE url = ?;
             """;
     public static final RowMapper<Link> LINK_MAPPER = (ResultSet rs, int rowNum) -> Link.builder()
             .id(rs.getLong("id"))
             .url(URI.create(rs.getString("url")))
-            .updatedAt(rs.getObject("updated_at", OffsetDateTime.class))
+            .lastCheckedAt(rs.getObject("last_checked_at", OffsetDateTime.class))
             .build();
 
     private final JdbcTemplate jdbcTemplate;
 
     @Override
     public void save(Link entity) {
-        OffsetDateTime updatedAt = entity.getUpdatedAt() == null ? OffsetDateTime.now() : entity.getUpdatedAt();
+        if (entity.getId() != null) {
+            long id = entity.getId();
 
-        Long id = jdbcTemplate.queryForObject(SAVE_SQL, Long.class, entity.getUrl().toString(), updatedAt);
-        entity.setId(id);
+            int rows = jdbcTemplate.update(UPDATE_SQL, entity.getLastCheckedAt(), id);
+
+            if (rows == 0) {
+                throw new EmptyResultDataAccessException("Expected link with id %s to be stored in db".formatted(id), 0);
+            }
+        } else {
+            Long id = jdbcTemplate.queryForObject(SAVE_SQL, Long.class, entity.getUrl().toString());
+            entity.setId(id);
+        }
     }
 
     @Override
@@ -93,17 +108,16 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     public void findOrCreate(Link link) {
-        OffsetDateTime updatedAt = link.getUpdatedAt() == null ? OffsetDateTime.now() : link.getUpdatedAt();
-        link.setUpdatedAt(updatedAt);
         String url = link.getUrl().toString();
 
-        Long id = jdbcTemplate.queryForObject(FIND_OR_CREATE_SQL, Long.class, url, updatedAt, url);
+        Link result = jdbcTemplate.queryForObject(FIND_OR_CREATE_SQL, LINK_MAPPER, url, url);
 
-        link.setId(id);
+        link.setId(result.getId());
+        link.setLastCheckedAt(result.getLastCheckedAt());
     }
 
     @Override
     public Optional<Link> findByUrl(URI url) {
-        return jdbcTemplate.queryForStream(FIND_BY_URL, LINK_MAPPER, url.toString()).findAny();
+        return jdbcTemplate.queryForStream(FIND_BY_URL_SQL, LINK_MAPPER, url.toString()).findAny();
     }
 }

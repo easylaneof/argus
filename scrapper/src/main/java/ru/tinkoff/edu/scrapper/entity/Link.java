@@ -9,11 +9,11 @@ import java.net.URI;
 import java.time.OffsetDateTime;
 
 @Data
-@Builder()
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Link {
     private Long id;
     private URI url;
-    private OffsetDateTime updatedAt;
+    private OffsetDateTime lastCheckedAt;
 }
