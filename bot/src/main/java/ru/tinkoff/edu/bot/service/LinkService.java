@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LinkService {
-    Optional<LinkResponse> trackLink(Long chatId, String link);
+    Optional<LinkResponse> trackLink(long chatId, String link);
 
-    Optional<LinkResponse> untrackLink(Long chatId, String link);
+    Optional<LinkResponse> untrackLink(long chatId, String link);
 
-    List<LinkResponse> getAllLinks(Long chatId);
+    List<LinkResponse> getAllLinks(long chatId);
 }
