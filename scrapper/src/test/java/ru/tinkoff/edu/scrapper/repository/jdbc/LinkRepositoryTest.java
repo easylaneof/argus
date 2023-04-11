@@ -25,6 +25,8 @@ class LinkRepositoryTest extends JdbcRepositoryEnvironment {
     private static final long SECOND_LINK_ID = 2L;
     private static final URI SECOND_LINK_URI = URI.create("https://stackoverflow.com/questions/123321/my-awesome-question");
 
+    private static final int BATCH_SIZE = 5;
+
     private static final long UNKNOWN_ID = 1000L;
 
     private static Link makeTestLink() {
@@ -43,6 +45,27 @@ class LinkRepositoryTest extends JdbcRepositoryEnvironment {
     @Sql("/sql/add_links.sql")
     void findAll__dbHasLinks_returnsCorrectResult() {
         assertThat(linkRepository.findAll()).hasSize(2);
+    }
+
+    @Test
+    void findLeastRecentlyChecked__dbIsEmpty_returnsEmptyList() {
+        assertThat(linkRepository.findLeastRecentlyChecked(BATCH_SIZE)).isEmpty();
+    }
+
+    @Test
+    @Sql("/sql/add_links_with_check_time.sql")
+    void findLeastRecentlyChecked__dbIsHasLinks_returnsValidResult() {
+        List<Link> links = linkRepository.findLeastRecentlyChecked(BATCH_SIZE);
+
+        assertThat(links).hasSize(BATCH_SIZE);
+
+        for (int i = 0; i < 2; i++) {
+            assertThat(links.get(i).getLastCheckedAt()).isNull();
+        }
+
+        for (int i = 3; i < 5; i++) {
+            assertThat(links.get(i).getLastCheckedAt()).isNotNull();
+        }
     }
 
     @Test

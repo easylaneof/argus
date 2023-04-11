@@ -16,4 +16,5 @@ public class Link {
     private Long id;
     private URI url;
     private OffsetDateTime lastCheckedAt;
+    private OffsetDateTime updatedAt;
 }

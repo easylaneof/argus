@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS chat (
 CREATE TABLE IF NOT EXISTS link (
     id BIGSERIAL PRIMARY KEY,
     url VARCHAR(2048) NOT NULL UNIQUE, -- https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
-    last_checked_at TIMESTAMPTZ
+    last_checked_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
 );
 
 --changeset easylaneof:add-subscription-table
