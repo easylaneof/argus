@@ -12,9 +12,9 @@ CREATE TABLE IF NOT EXISTS link (
     updated_at timestamptz NOT NULL
 );
 
---changeset easylaneof:add-chat_link-table
-CREATE TABLE IF NOT EXISTS chat_link (
-    chat_id BIGINT REFERENCES chat(id) NOT NULL,
+--changeset easylaneof:add-subscription-table
+CREATE TABLE IF NOT EXISTS subscription (
+    chat_id BIGINT REFERENCES chat(id) ON DELETE CASCADE NOT NULL,
     link_id BIGINT REFERENCES link(id) NOT NULL,
 
     PRIMARY KEY (chat_id, link_id)
