@@ -1,5 +1,5 @@
 <b>Available commands:</b>
 
 <#list commands as command>
-/${command.name()}: ${command.description()}
+/${command.command()}: ${command.description()}
 </#list>
