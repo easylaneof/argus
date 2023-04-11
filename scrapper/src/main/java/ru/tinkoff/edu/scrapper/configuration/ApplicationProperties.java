@@ -15,6 +15,7 @@ public record ApplicationProperties(@NotNull String test, Scheduler scheduler, A
     }
 
     public record Api(@DefaultValue("https://api.github.com") String githubApiUrl,
-                      @DefaultValue("https://api.stackexchange.com/2.3") String stackOverflowApiUrl) {
+                      @DefaultValue("https://api.stackexchange.com/2.3") String stackOverflowApiUrl,
+                      String botApiUrl) {
     }
 }
