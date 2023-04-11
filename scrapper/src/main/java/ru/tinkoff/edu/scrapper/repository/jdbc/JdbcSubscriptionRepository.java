@@ -28,7 +28,7 @@ public class JdbcSubscriptionRepository implements SubscriptionRepository {
             """;
 
     private static final String FIND_CHAT_LINKS_SQL = """
-            SELECT id, url, last_checked_at
+            SELECT id, url, last_checked_at, updated_at
             FROM link l
             JOIN subscription cl ON l.id = cl.link_id
             WHERE cl.chat_id = ?

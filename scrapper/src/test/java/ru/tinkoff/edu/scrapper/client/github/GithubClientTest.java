@@ -36,7 +36,7 @@ class GithubClientTest {
         mockApiResponse("""
                   {
                       "id": %s,
-                      "updated_at": "%s"
+                      "pushed_at": "%s"
                   }
                 """.formatted(expected.id(), expected.updatedAt()));
 
