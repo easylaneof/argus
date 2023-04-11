@@ -4,7 +4,8 @@ app:
     interval: 10s
   api:
     github-api-url: https://api.github.com
-    stack-overflow-api-url: https://api.stackexchange.com/2.
+    stack-overflow-api-url: https://api.stackexchange.com/2
+    bot-api-url: http://localhost:8081
 
 spring:
   liquibase:
