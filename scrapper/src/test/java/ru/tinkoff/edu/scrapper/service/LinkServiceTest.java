@@ -7,6 +7,12 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import ru.tinkoff.edu.parser.LinkParserService;
+import ru.tinkoff.edu.parser.LinkParserServiceConfiguration;
+import ru.tinkoff.edu.parser.LinkParserServiceImpl;
 import ru.tinkoff.edu.scrapper.entity.Link;
 import ru.tinkoff.edu.scrapper.repository.SubscriptionRepository;
 
@@ -15,17 +21,22 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {LinkParserServiceConfiguration.class})
 class LinkServiceTest {
     private static final long CHAT_ID = 123312;
 
-    private static final URI TEST_URI = URI.create("google.com");
+    private static final URI TEST_URI = URI.create("https://github.com/easylaneof/easylaneof");
+    private static final URI INVALID_URI = URI.create("https://google.com");
 
     @Mock
     private SubscriptionRepository subscriptionRepository;
+
+    @Autowired
+    private LinkParserService linkParserService;
 
     @Captor
     private ArgumentCaptor<Link> linkCaptor;
@@ -37,11 +48,11 @@ class LinkServiceTest {
 
     @BeforeEach
     void setUp() {
-        linkService = new LinkServiceImpl(subscriptionRepository);
+        linkService = new LinkServiceImpl(linkParserService, subscriptionRepository);
     }
 
     @Test
-    void add__callsRepository() {
+    void add__uriIsValid_callsRepository() {
         // act
         linkService.add(CHAT_ID, TEST_URI);
 
@@ -53,7 +64,14 @@ class LinkServiceTest {
     }
 
     @Test
-    void remove__callsRepository() {
+    void add__uriIsInvalid_callsRepository() {
+        assertThatThrownBy(() -> linkService.add(CHAT_ID, INVALID_URI));
+
+        verifyNoInteractions(subscriptionRepository);
+    }
+
+    @Test
+    void remove__uriIsValid_callsRepository() {
         // act
         linkService.remove(CHAT_ID, TEST_URI);
 
@@ -65,7 +83,15 @@ class LinkServiceTest {
     }
 
     @Test
-    void findChatLinks__callsRepository() {
+    void remove__uriIsInvalid_callsRepository() {
+        assertThatThrownBy(() -> linkService.remove(CHAT_ID, INVALID_URI));
+
+        verifyNoInteractions(subscriptionRepository);
+    }
+
+
+    @Test
+    void findChatLinks__uriIsValid_callsRepository() {
         // arrange
         List<Link> expectedResult = links();
         when(linkService.findChatLinks(CHAT_ID)).thenReturn(expectedResult);

@@ -2,6 +2,18 @@ package ru.tinkoff.edu.parser;
 
 import jakarta.annotation.Nullable;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 public interface LinkParserService {
-    @Nullable ParsingResult parse(String url);
+    default @Nullable ParsingResult parse(String uri) {
+        try {
+            return parse(new URI(uri));
+        } catch (URISyntaxException e) {
+            return null;
+        }
+    }
+
+    @Nullable
+    ParsingResult parse(URI uri);
 }

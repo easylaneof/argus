@@ -5,24 +5,18 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static ru.tinkoff.edu.parser.uri.UriTestUtils.*;
+import static ru.tinkoff.edu.parser.uri.UriTestUtils.githubLink;
+import static ru.tinkoff.edu.parser.uri.UriTestUtils.stackOverflowLink;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = LinkParserServiceIT.LinkParserServiceTestConfiguration.class)
-public class LinkParserServiceIT {
-    @TestConfiguration
-    @ComponentScan("ru.tinkoff.edu.parser")
-    static class LinkParserServiceTestConfiguration {
-    }
-
+@ContextConfiguration(classes = LinkParserServiceConfiguration.class)
+public class LinkParserServiceTest {
     @Autowired
     LinkParserService linkParserService;
 
@@ -59,6 +53,8 @@ public class LinkParserServiceIT {
 
     private static Stream<Arguments> provideInvalidLinks() {
         return Stream.of(
+                "",
+                        "Random text",
                         "https://google.com",
                         "ftp://github.com",
                         "http://github.com:81",
