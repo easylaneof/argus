@@ -1,11 +1,11 @@
 app:
   test: Scrapper
   scheduler:
-    interval: 10s
+    interval: 30s
     update-batch-size: 5
   api:
     github-api-url: https://api.github.com
-    stack-overflow-api-url: https://api.stackexchange.com/2
+    stack-overflow-api-url: https://api.stackexchange.com/2.3
     bot-api-url: http://localhost:8081
 
 spring:

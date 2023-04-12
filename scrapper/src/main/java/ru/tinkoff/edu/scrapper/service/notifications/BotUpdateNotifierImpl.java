@@ -18,8 +18,10 @@ public class BotUpdateNotifierImpl implements BotUpdateNotifier {
     private final SubscriptionRepository subscriptionRepository;
 
     @Override
-    public void notifyBot(List<Link> updatedLinks) {
-        for (Link link : updatedLinks) {
+    public void notifyBot(List<LinksUpdater.Delta> updatedLinks) {
+        for (var delta : updatedLinks) {
+            Link link = delta.link();
+
             List<Long> chatIds = subscriptionRepository
                     .findLinkChats(link.getUrl())
                     .stream()
@@ -29,7 +31,7 @@ public class BotUpdateNotifierImpl implements BotUpdateNotifier {
             LinkUpdateRequest request = new LinkUpdateRequest(
                     link.getId(),
                     link.getUrl().toString(),
-                    "Something just happened!",
+                    delta.description(),
                     chatIds
             );
 
