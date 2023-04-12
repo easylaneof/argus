@@ -16,7 +16,7 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-class LinkRepositoryTest extends JdbcRepositoryEnvironment {
+class JdbcLinkRepositoryTest extends JdbcRepositoryEnvironment {
     private static final URI UNKNOWN_URI = URI.create("google.com");
 
     private static final long FIRST_LINK_ID = 1L;

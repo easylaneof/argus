@@ -5,18 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.jdbc.Sql;
 import ru.tinkoff.edu.scrapper.entity.Chat;
-import ru.tinkoff.edu.scrapper.entity.Link;
 import ru.tinkoff.edu.scrapper.repository.ChatRepository;
 import ru.tinkoff.edu.scrapper.repository.LinkRepository;
 import ru.tinkoff.edu.scrapper.testutil.JdbcRepositoryEnvironment;
 
-import java.net.URI;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-class ChatRepositoryTest extends JdbcRepositoryEnvironment {
+class JdbcChatRepositoryTest extends JdbcRepositoryEnvironment {
     private static final long TEST_ID = 123321;
 
     private static final long FIRST_CHAT_ID = 1;
