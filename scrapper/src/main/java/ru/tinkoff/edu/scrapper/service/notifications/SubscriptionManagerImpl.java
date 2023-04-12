@@ -1,14 +1,18 @@
 package ru.tinkoff.edu.scrapper.service.notifications;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.scrapper.entity.Link;
 import ru.tinkoff.edu.scrapper.repository.LinkRepository;
 
+import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class SubscriptionManagerImpl implements SubscriptionManager {
     private final LinksUpdater linksUpdater;
     private final LinkRepository linkRepository;
@@ -18,7 +22,14 @@ public class SubscriptionManagerImpl implements SubscriptionManager {
     public void updateLinks(int batchSize) {
         List<Link> leastRecentlyChecked = linkRepository.findLeastRecentlyChecked(batchSize);
 
-        List<Link> updatedLinks = linksUpdater.updateLinks(leastRecentlyChecked);
+        log.info("Updating links: {}", leastRecentlyChecked
+                .stream()
+                .map(Link::getUrl)
+                .map(URI::toString)
+                .collect(Collectors.joining("\n"))
+        );
+
+        List<LinksUpdater.Delta> updatedLinks = linksUpdater.updateLinks(leastRecentlyChecked);
 
         saveLinks(leastRecentlyChecked);
 
