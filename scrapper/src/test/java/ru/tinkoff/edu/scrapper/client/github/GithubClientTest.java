@@ -71,7 +71,9 @@ class GithubClientTest {
     private static Stream<Arguments> provideValidResponses() {
         return Stream.of(
                 Arguments.of(
-                        new GithubRepositoryResponse(1L, OffsetDateTime.ofInstant(Instant.ofEpochSecond(1662505559), ZoneOffset.UTC)),
+                        new GithubRepositoryResponse(1L,
+                                OffsetDateTime.ofInstant(Instant.ofEpochSecond(1662505559), ZoneOffset.UTC),
+                                1),
                         "user",
                         "repo-name"
                 )
