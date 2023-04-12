@@ -37,10 +37,14 @@ class StackOverflowClientTest {
     @MethodSource("provideValidResponses")
     void checkQuestion__responseIsOk_returnsResponse(StackOverflowQuestionResponse expected) throws InterruptedException {
         mockApiResponse("""
-                  {
-                      "items": [{"question_id": %s, "last_activity_date": %s}]
-                  }
-                """.formatted(expected.id(), expected.updatedAt().toInstant().getLong(ChronoField.INSTANT_SECONDS)));
+                          {
+                              "items": [{"question_id": %s, "last_activity_date": %s, "answer_count": %s}]
+                          }
+                        """.formatted(expected.id(),
+                        expected.updatedAt().toInstant().getLong(ChronoField.INSTANT_SECONDS),
+                        expected.answerCount()
+                )
+        );
 
         StackOverflowQuestionResponse result = stackOverflowClient
                 .checkQuestion(new StackOverflowQuestion(Long.toString(expected.id())))
@@ -58,9 +62,10 @@ class StackOverflowClientTest {
         final var expectedResult = questions().findFirst().orElseThrow();
 
         String items = questions()
-                .map(question -> "{\"question_id\": %s, \"last_activity_date\": %s}".formatted(
+                .map(question -> "{\"question_id\": %s, \"last_activity_date\": %s, \"answer_count\": %s}".formatted(
                                 question.id(),
-                                question.updatedAt().toInstant().getLong(ChronoField.INSTANT_SECONDS)
+                                question.updatedAt().toInstant().getLong(ChronoField.INSTANT_SECONDS),
+                                question.answerCount()
                         )
                 )
                 .collect(Collectors.joining(", "));

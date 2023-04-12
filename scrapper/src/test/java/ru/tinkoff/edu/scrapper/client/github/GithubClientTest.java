@@ -36,9 +36,10 @@ class GithubClientTest {
         mockApiResponse("""
                   {
                       "id": %s,
-                      "pushed_at": "%s"
+                      "pushed_at": "%s",
+                      "open_issues_count": %s
                   }
-                """.formatted(expected.id(), expected.updatedAt()));
+                """.formatted(expected.id(), expected.updatedAt(), expected.openIssuesCount()));
 
         GithubRepositoryResponse result = githubClient
                 .checkRepository(new GithubRepository(user, repoName))
