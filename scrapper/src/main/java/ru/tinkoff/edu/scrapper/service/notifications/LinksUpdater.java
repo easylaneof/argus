@@ -5,5 +5,8 @@ import ru.tinkoff.edu.scrapper.entity.Link;
 import java.util.List;
 
 public interface LinksUpdater {
-    List<Link> updateLinks(List<Link> links);
+    record Delta(Link link, String description) {
+    }
+
+    List<Delta> updateLinks(List<Link> links);
 }

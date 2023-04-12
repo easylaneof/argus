@@ -7,20 +7,18 @@ import ru.tinkoff.edu.parser.ParsingResult;
 import ru.tinkoff.edu.parser.ParsingResult.GithubRepository;
 import ru.tinkoff.edu.parser.ParsingResult.StackOverflowQuestion;
 import ru.tinkoff.edu.scrapper.client.github.GithubClient;
+import ru.tinkoff.edu.scrapper.client.github.GithubRepositoryResponse;
 import ru.tinkoff.edu.scrapper.client.stackoverflow.StackOverflowClient;
 import ru.tinkoff.edu.scrapper.client.stackoverflow.StackOverflowQuestionResponse;
 import ru.tinkoff.edu.scrapper.entity.Link;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.Function;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+// FIXME: refactor
 public class LinksUpdaterImpl implements LinksUpdater {
     private final GithubClient githubClient;
 
@@ -32,7 +30,7 @@ public class LinksUpdaterImpl implements LinksUpdater {
     }
 
     @Override
-    public List<Link> updateLinks(List<Link> links) {
+    public List<Delta> updateLinks(List<Link> links) {
         List<LinkAndParsingResult<GithubRepository>> githubLinks = new ArrayList<>();
         List<LinkAndParsingResult<StackOverflowQuestion>> stackOverflowLinks = new ArrayList<>();
 
@@ -54,57 +52,101 @@ public class LinksUpdaterImpl implements LinksUpdater {
             }
         }
 
-        List<Link> updatedLinks = new ArrayList<>();
+        List<Delta> updatedLinks = new ArrayList<>();
 
         handleGithubLinks(updatedLinks, githubLinks);
-        handleStackOverflow(updatedLinks, stackOverflowLinks);
+
+        handleStackOverflowLinks(updatedLinks, stackOverflowLinks);
 
         return updatedLinks;
     }
 
-    private void handleGithubLinks(List<Link> updatedLinks, List<LinkAndParsingResult<GithubRepository>> links) {
+    private void handleGithubLinks(List<Delta> updatedLinks, List<LinkAndParsingResult<GithubRepository>> links) {
         for (var linkAndResult : links) {
             Link link = linkAndResult.link();
             GithubRepository parsingResult = linkAndResult.parsed();
 
-            githubClient.checkRepository(parsingResult).ifPresent((response) -> {
-                OffsetDateTime updatedAt = response.updatedAt();
-
-                // first check, do not alert
-                if (link.getUpdatedAt() == null) {
-                    link.setUpdatedAt(response.updatedAt());
-                } else if (!Objects.equals(link.getUpdatedAt(), updatedAt)) {
-                    link.setUpdatedAt(response.updatedAt());
-                    updatedLinks.add(link);
-                }
-            });
+            githubClient.checkRepository(parsingResult)
+                    .flatMap(response -> handleGithubLink(link, response))
+                    .ifPresent(updatedLinks::add);
         }
     }
 
-    private void handleStackOverflow(List<Link> updatedLinks, List<LinkAndParsingResult<StackOverflowQuestion>> links) {
+    private static Optional<Delta> handleGithubLink(Link link, GithubRepositoryResponse response) {
+        OffsetDateTime updatedAt = response.updatedAt();
+        Integer openIssuesCount = response.openIssuesCount();
+
+        boolean sameUpdatesCount = Objects.equals(link.getUpdatesCount(), openIssuesCount);
+
+        // first check, do not alert
+        if (link.getUpdatedAt() == null) {
+            link.setUpdatedAt(updatedAt);
+            link.setUpdatesCount(openIssuesCount);
+        } else if (!Objects.equals(link.getUpdatedAt(), updatedAt) || !sameUpdatesCount) {
+            link.setUpdatedAt(response.updatedAt());
+
+            String message;
+
+            if (!sameUpdatesCount) {
+                link.setUpdatesCount(openIssuesCount);
+                message = "got a new issue!";
+            } else {
+                message = "something happened!";
+            }
+
+            return Optional.of(new Delta(link, message));
+        }
+
+        return Optional.empty();
+    }
+
+    private void handleStackOverflowLinks(List<Delta> updatedLinks, List<LinkAndParsingResult<ParsingResult.StackOverflowQuestion>> links) {
+        if (links.isEmpty()) {
+            return;
+        }
+
         // order in response is not the one that we need, so map id to link,
         // so we can change link fast
         Map<Long, Link> idToLink = links
                 .stream()
-                .map(LinkAndParsingResult::link)
                 .collect(Collectors.toMap(
-                        Link::getId,
-                        Function.identity()
+                        (r) -> Long.parseLong(r.parsed().id()),
+                        LinkAndParsingResult::link
                 ));
 
         List<StackOverflowQuestion> results = links.stream().map(LinkAndParsingResult::parsed).toList();
 
         stackOverflowClient.checkQuestions(results).ifPresent((response) -> {
             for (StackOverflowQuestionResponse item : response.items()) {
-                Link link = idToLink.get(item.id());
-                OffsetDateTime updatedAt = item.updatedAt();
-
-                if (!Objects.equals(link.getUpdatedAt(), updatedAt)) {
-                    link.setUpdatedAt(updatedAt);
-
-                    updatedLinks.add(link);
-                }
+                handleStackOverflowLink(idToLink, item).ifPresent(updatedLinks::add);
             }
         });
+    }
+
+    private static Optional<Delta> handleStackOverflowLink(
+            Map<Long, Link> idToLink,
+            StackOverflowQuestionResponse item
+    ) {
+        Link link = idToLink.get(item.id());
+
+        OffsetDateTime updatedAt = item.updatedAt();
+        Integer answerCount = item.answerCount();
+        boolean sameUpdatesCount = Objects.equals(link.getUpdatesCount(), answerCount);
+
+        if (!Objects.equals(link.getUpdatedAt(), updatedAt) || !sameUpdatesCount) {
+            link.setUpdatedAt(updatedAt);
+
+            String message;
+
+            if (!sameUpdatesCount) {
+                message = "got a new answer!";
+            } else {
+                message = "something happened!";
+            }
+
+            return Optional.of(new Delta(link, message));
+        }
+
+        return Optional.empty();
     }
 }
