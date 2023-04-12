@@ -15,7 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @Rollback
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class JdbcRepositoryEnvironment extends IntegrationEnvironment {
-    @ComponentScan("ru.tinkoff.edu.scrapper.repository")
+    @ComponentScan("ru.tinkoff.edu.scrapper.repository.jdbc")
     @Configuration
     static class JdbcRepositoryTestConfiguration {}
 }

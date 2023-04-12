@@ -14,7 +14,7 @@ import java.net.URI;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-class SubscriptionRepositoryTest extends JdbcRepositoryEnvironment {
+class JdbcSubscriptionRepositoryTest extends JdbcRepositoryEnvironment {
     private static final long TEST_ID = 123321;
 
     private static final long FIRST_LINK_ID = 1000;
