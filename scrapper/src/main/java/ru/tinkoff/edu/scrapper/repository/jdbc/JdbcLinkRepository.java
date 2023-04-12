@@ -1,6 +1,7 @@
 package ru.tinkoff.edu.scrapper.repository.jdbc;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,8 +15,9 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
 @RequiredArgsConstructor
+@Repository
+@Primary // TODO: replace with configuration
 public class JdbcLinkRepository implements LinkRepository {
     private static final String SAVE_SQL = """
             INSERT INTO link(url)
@@ -25,27 +27,27 @@ public class JdbcLinkRepository implements LinkRepository {
 
     private static final String UPDATE_SQL = """
             UPDATE link
-            SET last_checked_at = ?, updated_at = ?
+            SET last_checked_at = ?, updated_at = ?, updates_count = ?
             WHERE id = ?
             """;
 
     private static final String FIND_ALL_SQL = """
-            SELECT id, url, last_checked_at, updated_at FROM link;
+            SELECT id, url, last_checked_at, updated_at, updates_count FROM link;
             """;
 
     private static final String FIND_LEAST_RECENTLY_CHECKED_SQL = """
-            SELECT id, url, last_checked_at, updated_at
+            SELECT id, url, last_checked_at, updated_at, updates_count
             FROM link
             ORDER BY last_checked_at NULLS FIRST
             LIMIT ?
             """;
 
     private static final String FIND_BY_ID_SQL = """
-            SELECT id, url, last_checked_at, updated_at FROM link WHERE id = ?
+            SELECT id, url, last_checked_at, updated_at, updates_count FROM link WHERE id = ?
             """;
 
     private static final String FIND_BY_URL_SQL = """
-            SELECT id, url, last_checked_at, updated_at FROM link WHERE url = ?
+            SELECT id, url, last_checked_at, updated_at, updates_count FROM link WHERE url = ?
             """;
 
     private static final String COUNT_SQL = """
@@ -61,18 +63,21 @@ public class JdbcLinkRepository implements LinkRepository {
               INSERT INTO link(url)
               VALUES (?)
               ON CONFLICT (url) DO NOTHING
-              RETURNING id, url, last_checked_at, updated_at
+              RETURNING id, url, last_checked_at, updated_at, updates_count
             )
-            SELECT id, url, last_checked_at, updated_at FROM insert
+            SELECT id, url, last_checked_at, updated_at, updates_count FROM insert
             UNION
-            SELECT id, url, last_checked_at, updated_at FROM link
+            SELECT id, url, last_checked_at, updated_at, updates_count FROM link
             WHERE url = ?;
             """;
+
+
     public static final RowMapper<Link> LINK_MAPPER = (ResultSet rs, int rowNum) -> Link.builder()
             .id(rs.getLong("id"))
             .url(URI.create(rs.getString("url")))
             .lastCheckedAt(rs.getObject("last_checked_at", OffsetDateTime.class))
             .updatedAt(rs.getObject("updated_at", OffsetDateTime.class))
+            .updatesCount(rs.getInt("updates_count"))
             .build();
 
     private final JdbcTemplate jdbcTemplate;
@@ -82,7 +87,13 @@ public class JdbcLinkRepository implements LinkRepository {
         if (entity.getId() != null) {
             long id = entity.getId();
 
-            int rows = jdbcTemplate.update(UPDATE_SQL, entity.getLastCheckedAt(), entity.getUpdatedAt(), id);
+            int rows = jdbcTemplate.update(
+                    UPDATE_SQL,
+                    entity.getLastCheckedAt(),
+                    entity.getUpdatedAt(),
+                    entity.getUpdatesCount(),
+                    id
+            );
 
             if (rows == 0) {
                 throw new EmptyResultDataAccessException("Expected link with id %s to be stored in db".formatted(id), 0);
@@ -127,6 +138,8 @@ public class JdbcLinkRepository implements LinkRepository {
 
         link.setId(result.getId());
         link.setLastCheckedAt(result.getLastCheckedAt());
+        link.setUpdatedAt(result.getUpdatedAt());
+        link.setUpdatesCount(result.getUpdatesCount());
     }
 
     @Override
