@@ -17,4 +17,5 @@ public class Link {
     private URI url;
     private OffsetDateTime lastCheckedAt;
     private OffsetDateTime updatedAt;
+    private Integer updatesCount;
 }

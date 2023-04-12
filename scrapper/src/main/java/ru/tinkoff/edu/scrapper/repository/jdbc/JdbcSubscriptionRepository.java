@@ -1,6 +1,7 @@
 package ru.tinkoff.edu.scrapper.repository.jdbc;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,7 @@ import static ru.tinkoff.edu.scrapper.repository.jdbc.JdbcLinkRepository.LINK_MA
 
 @RequiredArgsConstructor
 @Repository
+@Primary // TODO: replace with configuration
 public class JdbcSubscriptionRepository implements SubscriptionRepository {
     private static final String ADD_LINK_TO_CHAT_SQL = """
             INSERT INTO subscription(chat_id, link_id) VALUES (?, ?);
@@ -28,17 +30,17 @@ public class JdbcSubscriptionRepository implements SubscriptionRepository {
             """;
 
     private static final String FIND_CHAT_LINKS_SQL = """
-            SELECT id, url, last_checked_at, updated_at
+            SELECT id, url, last_checked_at, updated_at, updates_count
             FROM link l
-            JOIN subscription cl ON l.id = cl.link_id
-            WHERE cl.chat_id = ?
+            JOIN subscription s ON l.id = s.link_id
+            WHERE s.chat_id = ?
             """;
 
     private static final String FIND_LINK_CHATS_SQL = """
             SELECT id
             FROM chat c
-            JOIN subscription cl ON c.id = cl.chat_id
-            WHERE cl.link_id = ?
+            JOIN subscription s ON c.id = s.chat_id
+            WHERE s.link_id = ?
             """;
 
     private final ChatRepository chatRepository;
