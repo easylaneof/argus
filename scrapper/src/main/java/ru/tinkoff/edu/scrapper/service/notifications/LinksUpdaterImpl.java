@@ -11,7 +11,6 @@ import ru.tinkoff.edu.scrapper.client.github.GithubRepositoryResponse;
 import ru.tinkoff.edu.scrapper.client.stackoverflow.StackOverflowClient;
 import ru.tinkoff.edu.scrapper.client.stackoverflow.StackOverflowQuestionResponse;
 import ru.tinkoff.edu.scrapper.entity.Link;
-import ru.tinkoff.edu.scrapper.service.LinksUpdater;
 
 import java.time.OffsetDateTime;
 import java.util.*;
