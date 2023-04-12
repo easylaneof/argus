@@ -1,6 +1,7 @@
 package ru.tinkoff.edu.scrapper.repository.jdbc;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
+@Primary // TODO: replace with configuration
 public class JdbcChatRepository implements ChatRepository {
     private static final String SAVE_SQL = """
             INSERT INTO chat(id)
