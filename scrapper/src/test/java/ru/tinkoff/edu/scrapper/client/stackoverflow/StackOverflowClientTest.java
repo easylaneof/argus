@@ -116,8 +116,12 @@ class StackOverflowClientTest {
 
     private static Stream<StackOverflowQuestionResponse> questions() {
         return Stream.of(
-                new StackOverflowQuestionResponse(1L, OffsetDateTime.ofInstant(Instant.ofEpochSecond(1662505559), ZoneOffset.UTC)),
-                new StackOverflowQuestionResponse(123L, OffsetDateTime.ofInstant(Instant.ofEpochSecond(1590400952), ZoneOffset.UTC))
+                new StackOverflowQuestionResponse(1L,
+                        OffsetDateTime.ofInstant(Instant.ofEpochSecond(1662505559), ZoneOffset.UTC),
+                        1),
+                new StackOverflowQuestionResponse(123L,
+                        OffsetDateTime.ofInstant(Instant.ofEpochSecond(1590400952), ZoneOffset.UTC),
+                        1)
         );
     }
 }
