@@ -1,12 +1,22 @@
 package ru.tinkoff.edu.scrapper.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Data
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "chat")
 public class Chat {
+    @Id
     private Long id;
+
+    public Chat(Long id) {
+        this.id = id;
+    }
 }
