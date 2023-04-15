@@ -27,9 +27,6 @@ class JdbcChatRepositoryTest extends JdbcRepositoryEnvironment {
     @Autowired
     ChatRepository chatRepository;
 
-    @Autowired
-    LinkRepository linkRepository;
-
     @Test
     void findAll__dbIsEmpty_returnsEmptyList() {
         assertThat(chatRepository.findAll()).isEmpty();
