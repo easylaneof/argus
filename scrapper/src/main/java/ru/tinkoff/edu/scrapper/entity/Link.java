@@ -1,21 +1,41 @@
 package ru.tinkoff.edu.scrapper.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
+import ru.tinkoff.edu.scrapper.repository.jpa.UriAttributeConverter;
 
 import java.net.URI;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-@Data
 @Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "link")
 public class Link {
+    @Id
+    @GeneratedValue(
+            generator = "link_id_seq",
+            strategy = GenerationType.SEQUENCE
+    )
+    @SequenceGenerator(name = "link_id_seq", allocationSize = 1, initialValue = 1)
+    @Column(name = "id", nullable = false)
     private Long id;
+
+    @Column(name = "url", unique = true, nullable = false)
+    @Convert(converter = UriAttributeConverter.class)
     private URI url;
+
+    @Column(name = "last_checked_at")
     private OffsetDateTime lastCheckedAt;
+
+    @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
+
+    @Column(name = "updates_count")
     private Integer updatesCount;
 }
