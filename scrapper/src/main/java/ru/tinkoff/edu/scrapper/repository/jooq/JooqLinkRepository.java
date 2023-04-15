@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.tinkoff.edu.scrapper.entity.Link;
 import ru.tinkoff.edu.scrapper.repository.LinkRepository;
 
@@ -15,7 +16,7 @@ import static org.jooq.impl.DSL.name;
 import static ru.tinkoff.edu.scrapper.entity.jooq.tables.Link.LINK;
 
 @RequiredArgsConstructor
-@Component
+@Repository
 public class JooqLinkRepository implements LinkRepository {
     private final DSLContext create;
 
