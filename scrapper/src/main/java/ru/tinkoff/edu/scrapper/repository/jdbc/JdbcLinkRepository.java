@@ -17,7 +17,6 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
-@Primary // TODO: replace with configuration
 public class JdbcLinkRepository implements LinkRepository {
     private static final String SAVE_SQL = """
             INSERT INTO link(url)

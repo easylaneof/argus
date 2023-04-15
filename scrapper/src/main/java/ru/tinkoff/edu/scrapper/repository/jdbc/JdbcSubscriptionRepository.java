@@ -19,7 +19,6 @@ import static ru.tinkoff.edu.scrapper.repository.jdbc.JdbcLinkRepository.LINK_MA
 
 @RequiredArgsConstructor
 @Repository
-@Primary // TODO: replace with configuration
 public class JdbcSubscriptionRepository implements SubscriptionRepository {
     private static final String ADD_LINK_TO_CHAT_SQL = """
             INSERT INTO subscription(chat_id, link_id) VALUES (?, ?);
