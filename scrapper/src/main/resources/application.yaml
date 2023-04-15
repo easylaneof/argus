@@ -1,5 +1,4 @@
 app:
-  test: Scrapper
   scheduler:
     interval: 30s
     update-batch-size: 5
@@ -7,6 +6,8 @@ app:
     github-api-url: https://api.github.com
     stack-overflow-api-url: https://api.stackexchange.com/2.3
     bot-api-url: http://localhost:8081
+
+  database-access-type: jooq
 
 spring:
   liquibase:
