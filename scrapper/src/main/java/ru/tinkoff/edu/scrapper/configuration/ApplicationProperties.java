@@ -10,7 +10,11 @@ import java.time.Duration;
 
 @Validated
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
-public record ApplicationProperties(@NotNull String test, Scheduler scheduler, Api api) {
+public record ApplicationProperties(
+        Scheduler scheduler,
+        Api api,
+        @NotNull DatabaseAccessType databaseAccessType
+) {
     public record Scheduler(Duration interval, int updateBatchSize) {
     }
 
