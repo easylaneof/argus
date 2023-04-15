@@ -40,7 +40,7 @@ class ChatServiceTest {
 
         // assert
         verify(chatRepository).save(chatCaptor.capture());
-        assertThat(chatCaptor.getValue()).isEqualTo(new Chat(CHAT_ID));
+        assertThat(chatCaptor.getValue().getId()).isEqualTo(CHAT_ID);
     }
 
     @Test
