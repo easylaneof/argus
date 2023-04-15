@@ -10,7 +10,7 @@ import ru.tinkoff.edu.scrapper.client.stackoverflow.StackOverflowClient;
 import ru.tinkoff.edu.scrapper.client.stackoverflow.StackOverflowClientImpl;
 
 @Configuration
-public class ApiClientConfig {
+public class ApiClientConfiguration {
     @Bean
     public BotClient botClient(ApplicationProperties properties) {
         return new BotClientImpl(properties.api().botApiUrl());
@@ -24,15 +24,5 @@ public class ApiClientConfig {
     @Bean
     public GithubClient githubClient(ApplicationProperties properties) {
         return new GithubClientImpl(properties.api().githubApiUrl());
-    }
-
-    @Bean
-    public long schedulerIntervalMs(ApplicationProperties properties) {
-        return properties.scheduler().interval().toMillis();
-    }
-
-    @Bean
-    public int updateBatchSize(ApplicationProperties properties) {
-        return properties.scheduler().updateBatchSize();
     }
 }
