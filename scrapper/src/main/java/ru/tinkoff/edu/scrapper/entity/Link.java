@@ -38,4 +38,14 @@ public class Link {
 
     @Column(name = "updates_count")
     private Integer updatesCount;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "link_id")
+    @Builder.Default
+    private List<Subscription> subscriptions = new ArrayList<>();
+
+    public void addSubscription(Subscription subscription) {
+        subscriptions.add(subscription);
+        subscription.setLink(this);
+    }
 }

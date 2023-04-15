@@ -19,4 +19,13 @@ public class Chat {
     public Chat(Long id) {
         this.id = id;
     }
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chat_id")
+    private List<Subscription> subscriptions = new ArrayList<>();
+
+    public void addSubscription(Subscription subscription) {
+        subscriptions.add(subscription);
+        subscription.setChat(this);
+    }
 }
