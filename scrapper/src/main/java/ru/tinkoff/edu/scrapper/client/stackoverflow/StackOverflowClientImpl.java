@@ -3,7 +3,7 @@ package ru.tinkoff.edu.scrapper.client.stackoverflow;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
-import ru.tinkoff.edu.parser.ParsingResult;
+import ru.tinkoff.edu.parser.ParsingResult.StackOverflowQuestion;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,8 +25,8 @@ public class StackOverflowClientImpl implements StackOverflowClient {
     }
 
     @Override
-    public Optional<StackOverflowQuestionsResponse> checkQuestions(List<ParsingResult.StackOverflowQuestion> questions) {
-        String ids = questions.stream().map(ParsingResult.StackOverflowQuestion::id).collect(Collectors.joining(";"));
+    public Optional<StackOverflowQuestionsResponse> checkQuestions(List<StackOverflowQuestion> questions) {
+        String ids = questions.stream().map(StackOverflowQuestion::id).collect(Collectors.joining(";"));
 
         return client
                 .get()

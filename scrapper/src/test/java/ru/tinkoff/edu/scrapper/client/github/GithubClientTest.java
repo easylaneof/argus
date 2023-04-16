@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import ru.tinkoff.edu.parser.ParsingResult;
+import ru.tinkoff.edu.parser.ParsingResult.GithubRepository;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -41,7 +41,7 @@ class GithubClientTest {
                 """.formatted(expected.id(), expected.updatedAt()));
 
         GithubRepositoryResponse result = githubClient
-                .checkRepository(new ParsingResult.GithubRepository(user, repoName))
+                .checkRepository(new GithubRepository(user, repoName))
                 .orElseThrow();
 
         assertThat(result).isEqualTo(expected);
@@ -56,7 +56,7 @@ class GithubClientTest {
     void checkRepository__responseIsError_returnsEmpty(int code) {
         mockWebServer.enqueue(new MockResponse().setResponseCode(code));
 
-        assertThat(githubClient.checkRepository(new ParsingResult.GithubRepository("user", "1"))).isEmpty();
+        assertThat(githubClient.checkRepository(new GithubRepository("user", "1"))).isEmpty();
     }
 
     private void mockApiResponse(String body) {
