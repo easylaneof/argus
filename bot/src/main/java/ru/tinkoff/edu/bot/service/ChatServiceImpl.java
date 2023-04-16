@@ -11,6 +11,6 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void registerChat(long chatId) {
-        System.out.println(scrapperClient.registerChat(chatId));
+        scrapperClient.registerChat(chatId);
     }
 }
