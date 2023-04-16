@@ -2,6 +2,7 @@ package ru.tinkoff.edu.parser.uri;
 
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.parser.ParsingResult;
+import ru.tinkoff.edu.parser.ParsingResult.GithubRepository;
 
 @Component
 public class GithubUriParser extends AbstractUriParser {
@@ -17,6 +18,6 @@ public class GithubUriParser extends AbstractUriParser {
             return null;
         }
 
-        return new ParsingResult.GithubRepository(pathParts[0], pathParts[1]);
+        return new GithubRepository(pathParts[0], pathParts[1]);
     }
 }

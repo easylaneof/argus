@@ -3,7 +3,7 @@ package ru.tinkoff.edu.scrapper.client.github;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
-import ru.tinkoff.edu.parser.ParsingResult;
+import ru.tinkoff.edu.parser.ParsingResult.GithubRepository;
 
 import java.util.Optional;
 
@@ -23,7 +23,7 @@ public class GithubClientImpl implements GithubClient {
     }
 
     @Override
-    public Optional<GithubRepositoryResponse> checkRepository(ParsingResult.GithubRepository repository) {
+    public Optional<GithubRepositoryResponse> checkRepository(GithubRepository repository) {
         return client
                 .get()
                 .uri(REPOSITORY_URI_FORMAT.formatted(repository.user(), repository.name()))

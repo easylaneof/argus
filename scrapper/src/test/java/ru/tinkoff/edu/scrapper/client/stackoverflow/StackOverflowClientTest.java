@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import ru.tinkoff.edu.parser.ParsingResult;
+import ru.tinkoff.edu.parser.ParsingResult.StackOverflowQuestion;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -43,7 +43,7 @@ class StackOverflowClientTest {
                 """.formatted(expected.id(), expected.updatedAt().toInstant().getLong(ChronoField.INSTANT_SECONDS)));
 
         StackOverflowQuestionResponse result = stackOverflowClient
-                .checkQuestion(new ParsingResult.StackOverflowQuestion(Long.toString(expected.id())))
+                .checkQuestion(new StackOverflowQuestion(Long.toString(expected.id())))
                 .orElseThrow();
 
         assertThat(result).isEqualTo(expected);
@@ -72,7 +72,7 @@ class StackOverflowClientTest {
                 """.formatted(items));
 
         StackOverflowQuestionResponse result = stackOverflowClient
-                .checkQuestion(new ParsingResult.StackOverflowQuestion(Long.toString(expectedResult.id())))
+                .checkQuestion(new StackOverflowQuestion(Long.toString(expectedResult.id())))
                 .orElseThrow();
 
         assertThat(result).isEqualTo(expectedResult);
@@ -90,7 +90,7 @@ class StackOverflowClientTest {
                   }
                 """);
 
-        assertThat(stackOverflowClient.checkQuestion(new ParsingResult.StackOverflowQuestion("1"))).isEmpty();
+        assertThat(stackOverflowClient.checkQuestion(new StackOverflowQuestion("1"))).isEmpty();
     }
 
     @ParameterizedTest
@@ -98,7 +98,7 @@ class StackOverflowClientTest {
     void checkQuestion__responseIsError_returnsEmpty(int code) {
         mockWebServer.enqueue(new MockResponse().setResponseCode(code));
 
-        assertThat(stackOverflowClient.checkQuestion(new ParsingResult.StackOverflowQuestion("1"))).isEmpty();
+        assertThat(stackOverflowClient.checkQuestion(new StackOverflowQuestion("1"))).isEmpty();
     }
 
     private void mockApiResponse(String body) {

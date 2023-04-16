@@ -3,7 +3,7 @@ package ru.tinkoff.edu.parser.uri;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import ru.tinkoff.edu.parser.ParsingResult;
+import ru.tinkoff.edu.parser.ParsingResult.StackOverflowQuestion;
 
 import java.net.URI;
 import java.util.stream.Stream;
@@ -24,9 +24,9 @@ public class StackOverflowUriParserTest {
     void parse__linkIsValid_returnsQuestion(final URI uri, final String questionId) {
         final var result = parser.parse(uri);
 
-        assertThat(result).isInstanceOf(ParsingResult.StackOverflowQuestion.class);
+        assertThat(result).isInstanceOf(StackOverflowQuestion.class);
 
-        final var question = (ParsingResult.StackOverflowQuestion) result;
+        final var question = (StackOverflowQuestion) result;
 
         assertThat(question.id()).isEqualTo(questionId);
     }

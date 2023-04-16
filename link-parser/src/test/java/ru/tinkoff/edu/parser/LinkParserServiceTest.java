@@ -7,6 +7,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import ru.tinkoff.edu.parser.ParsingResult.GithubRepository;
+import ru.tinkoff.edu.parser.ParsingResult.StackOverflowQuestion;
 
 import java.util.stream.Stream;
 
@@ -31,9 +33,9 @@ public class LinkParserServiceTest {
     void parse__linkIsStackOverflow_returnsQuestion(String link, String questionId) {
         ParsingResult result = linkParserService.parse(link);
 
-        assertThat(result).isInstanceOf(ParsingResult.StackOverflowQuestion.class);
+        assertThat(result).isInstanceOf(StackOverflowQuestion.class);
 
-        var question = (ParsingResult.StackOverflowQuestion) result;
+        var question = (StackOverflowQuestion) result;
 
         assertThat(question.id()).isEqualTo(questionId);
     }
@@ -43,9 +45,9 @@ public class LinkParserServiceTest {
     void parse__linkIsGithub_returnsRepository(String link, String user, String repositoryName) {
         ParsingResult result = linkParserService.parse(link);
 
-        assertThat(result).isInstanceOf(ParsingResult.GithubRepository.class);
+        assertThat(result).isInstanceOf(GithubRepository.class);
 
-        var repository = (ParsingResult.GithubRepository) result;
+        var repository = (GithubRepository) result;
 
         assertThat(repository.user()).isEqualTo(user);
         assertThat(repository.name()).isEqualTo(repositoryName);
@@ -77,8 +79,8 @@ public class LinkParserServiceTest {
 
     private static Stream<Arguments> provideGithubUsersAndRepositories() {
         return Stream.of(
-                        new ParsingResult.GithubRepository("sanyarnd", "tinkoff-java-course-2022"),
-                        new ParsingResult.GithubRepository("test-user", "test-name")
+                        new GithubRepository("sanyarnd", "tinkoff-java-course-2022"),
+                        new GithubRepository("test-user", "test-name")
                 )
                 .map(r -> Arguments.of(githubLink(r.user(), r.name()), r.user(), r.name()));
     }
