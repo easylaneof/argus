@@ -1,9 +1,11 @@
-package ru.tinkoff.edu.scrapper.service;
+package ru.tinkoff.edu.scrapper.service.notifications;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.parser.LinkParserService;
 import ru.tinkoff.edu.parser.ParsingResult;
+import ru.tinkoff.edu.parser.ParsingResult.GithubRepository;
+import ru.tinkoff.edu.parser.ParsingResult.StackOverflowQuestion;
 import ru.tinkoff.edu.scrapper.client.github.GithubClient;
 import ru.tinkoff.edu.scrapper.client.stackoverflow.StackOverflowClient;
 import ru.tinkoff.edu.scrapper.client.stackoverflow.StackOverflowQuestionResponse;
@@ -31,8 +33,8 @@ public class LinksUpdaterImpl implements LinksUpdater {
 
     @Override
     public List<Link> updateLinks(List<Link> links) {
-        List<LinkAndParsingResult<ParsingResult.GithubRepository>> githubLinks = new ArrayList<>();
-        List<LinkAndParsingResult<ParsingResult.StackOverflowQuestion>> stackOverflowLinks = new ArrayList<>();
+        List<LinkAndParsingResult<GithubRepository>> githubLinks = new ArrayList<>();
+        List<LinkAndParsingResult<StackOverflowQuestion>> stackOverflowLinks = new ArrayList<>();
 
         for (Link link : links) {
             ParsingResult result = linkParserService.parse(link.getUrl());
@@ -43,9 +45,9 @@ public class LinksUpdaterImpl implements LinksUpdater {
                 throw new RuntimeException("Expected a parsable link, found " + link.getUrl()); // TODO: create exception hierarchy
             }
 
-            if (result instanceof ParsingResult.GithubRepository githubRepository) {
+            if (result instanceof GithubRepository githubRepository) {
                 githubLinks.add(new LinkAndParsingResult<>(link, githubRepository));
-            } else if (result instanceof ParsingResult.StackOverflowQuestion stackOverflowQuestion) {
+            } else if (result instanceof StackOverflowQuestion stackOverflowQuestion) {
                 stackOverflowLinks.add(new LinkAndParsingResult<>(link, stackOverflowQuestion));
             } else {
                 throw new RuntimeException("Expected " + link.getUrl() + " to be github or stackoverflow link, found " + result);
@@ -60,10 +62,10 @@ public class LinksUpdaterImpl implements LinksUpdater {
         return updatedLinks;
     }
 
-    private void handleGithubLinks(List<Link> updatedLinks, List<LinkAndParsingResult<ParsingResult.GithubRepository>> links) {
+    private void handleGithubLinks(List<Link> updatedLinks, List<LinkAndParsingResult<GithubRepository>> links) {
         for (var linkAndResult : links) {
             Link link = linkAndResult.link();
-            ParsingResult.GithubRepository parsingResult = linkAndResult.parsed();
+            GithubRepository parsingResult = linkAndResult.parsed();
 
             githubClient.checkRepository(parsingResult).ifPresent((response) -> {
                 OffsetDateTime updatedAt = response.updatedAt();
@@ -79,7 +81,7 @@ public class LinksUpdaterImpl implements LinksUpdater {
         }
     }
 
-    private void handleStackOverflow(List<Link> updatedLinks, List<LinkAndParsingResult<ParsingResult.StackOverflowQuestion>> links) {
+    private void handleStackOverflow(List<Link> updatedLinks, List<LinkAndParsingResult<StackOverflowQuestion>> links) {
         // order in response is not the one that we need, so map id to link,
         // so we can change link fast
         Map<Long, Link> idToLink = links
@@ -90,7 +92,7 @@ public class LinksUpdaterImpl implements LinksUpdater {
                         Function.identity()
                 ));
 
-        List<ParsingResult.StackOverflowQuestion> results = links.stream().map(LinkAndParsingResult::parsed).toList();
+        List<StackOverflowQuestion> results = links.stream().map(LinkAndParsingResult::parsed).toList();
 
         stackOverflowClient.checkQuestions(results).ifPresent((response) -> {
             for (StackOverflowQuestionResponse item : response.items()) {

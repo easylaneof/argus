@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.scrapper.service;
+package ru.tinkoff.edu.scrapper.service.notifications;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
