@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.scrapper.service;
+package ru.tinkoff.edu.scrapper.service.notifications;
 
 import ru.tinkoff.edu.scrapper.entity.Link;
 
