@@ -11,6 +11,7 @@ import ru.tinkoff.edu.scrapper.client.github.GithubRepositoryResponse;
 import ru.tinkoff.edu.scrapper.client.stackoverflow.StackOverflowClient;
 import ru.tinkoff.edu.scrapper.client.stackoverflow.StackOverflowQuestionResponse;
 import ru.tinkoff.edu.scrapper.entity.Link;
+import ru.tinkoff.edu.scrapper.service.LinksUpdater;
 
 import java.time.OffsetDateTime;
 import java.util.*;
@@ -83,16 +84,10 @@ public class LinksUpdaterImpl implements LinksUpdater {
             link.setUpdatedAt(updatedAt);
             link.setUpdatesCount(openIssuesCount);
         } else if (!Objects.equals(link.getUpdatedAt(), updatedAt) || !sameUpdatesCount) {
-            link.setUpdatedAt(response.updatedAt());
+            link.setUpdatedAt(updatedAt);
+            link.setUpdatesCount(openIssuesCount);
 
-            String message;
-
-            if (!sameUpdatesCount) {
-                link.setUpdatesCount(openIssuesCount);
-                message = "got a new issue!";
-            } else {
-                message = "something happened!";
-            }
+            String message = sameUpdatesCount ? "something happened!" : "got a new issue!";
 
             return Optional.of(new Delta(link, message));
         }
@@ -133,16 +128,15 @@ public class LinksUpdaterImpl implements LinksUpdater {
         Integer answerCount = item.answerCount();
         boolean sameUpdatesCount = Objects.equals(link.getUpdatesCount(), answerCount);
 
-        if (!Objects.equals(link.getUpdatedAt(), updatedAt) || !sameUpdatesCount) {
+        // first check, do not alert
+        if (link.getUpdatedAt() == null) {
             link.setUpdatedAt(updatedAt);
+            link.setUpdatesCount(answerCount);
+        } else if (!Objects.equals(link.getUpdatedAt(), updatedAt) || !sameUpdatesCount) {
+            link.setUpdatedAt(updatedAt);
+            link.setUpdatesCount(answerCount);
 
-            String message;
-
-            if (!sameUpdatesCount) {
-                message = "got a new answer!";
-            } else {
-                message = "something happened!";
-            }
+            String message = sameUpdatesCount ? "something happened!" : "got a new answer!";
 
             return Optional.of(new Delta(link, message));
         }
