@@ -1,13 +1,20 @@
 app:
-  test: Bot
   bot:
     apiKey: ${APP_TELEGRAM_KEY}
   api:
     scrapperApiUrl: 'http://localhost:8080'
+  scrapper-queue:
+    name: links
 
 springdoc:
   swagger-ui:
     path: /swagger-ui
+
+spring:
+  rabbitmq:
+    host: localhost
+    password: rabbitmq
+    username: rabbitmq
 
 server:
   port: 8081
