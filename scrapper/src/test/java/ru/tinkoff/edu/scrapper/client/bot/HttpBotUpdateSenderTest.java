@@ -11,15 +11,15 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-class BotClientTest {
+class HttpBotUpdateSenderTest {
     MockWebServer mockWebServer;
 
-    BotClient botClient;
+    BotUpdateSender botUpdateSender;
 
     @BeforeEach
     void setup() {
         mockWebServer = new MockWebServer();
-        botClient = new BotClientImpl(mockWebServer.url("/").url().toString());
+        botUpdateSender = new HttpBotUpdateSender(mockWebServer.url("/").url().toString());
     }
 
     @ParameterizedTest
@@ -27,7 +27,7 @@ class BotClientTest {
     void sendUpdates__differentResponses_sendsRequest(int statusCode) throws Exception {
         mockWebServer.enqueue(new MockResponse().setResponseCode(statusCode));
 
-        botClient.sendUpdates(linkUpdateRequest());
+        botUpdateSender.sendUpdates(linkUpdateRequest());
 
         RecordedRequest request = mockWebServer.takeRequest();
         assertThat(request.getMethod()).isEqualTo("POST");

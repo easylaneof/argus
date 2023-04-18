@@ -2,7 +2,7 @@ package ru.tinkoff.edu.scrapper.service.notifications;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.tinkoff.edu.scrapper.client.bot.BotClient;
+import ru.tinkoff.edu.scrapper.client.bot.BotUpdateSender;
 import ru.tinkoff.edu.scrapper.client.bot.LinkUpdateRequest;
 import ru.tinkoff.edu.scrapper.entity.Chat;
 import ru.tinkoff.edu.scrapper.entity.Link;
@@ -13,7 +13,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class BotUpdateNotifierImpl implements BotUpdateNotifier {
-    private final BotClient botClient;
+    private final BotUpdateSender botUpdateSender;
 
     private final SubscriptionRepository subscriptionRepository;
 
@@ -35,7 +35,7 @@ public class BotUpdateNotifierImpl implements BotUpdateNotifier {
                     chatIds
             );
 
-            botClient.sendUpdates(request);
+            botUpdateSender.sendUpdates(request);
         }
     }
 }

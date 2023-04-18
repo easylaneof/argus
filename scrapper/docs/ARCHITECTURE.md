@@ -32,5 +32,5 @@ sequenceDiagram
     
     SubscriptionManager ->> BotUpdateNotifier: Updated links
     
-    BotUpdateNotifier ->> BotClient: Notify bot
+    BotUpdateNotifier ->> BotUpdateSender: Notify bot
 ```

@@ -4,12 +4,12 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-public class BotClientImpl implements BotClient {
+public class HttpBotUpdateSender implements BotUpdateSender {
     private static final String UPDATES_URI = "/updates";
 
     private final WebClient client;
 
-    public BotClientImpl(String url) {
+    public HttpBotUpdateSender(String url) {
         client = WebClient.create(url);
     }
 
