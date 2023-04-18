@@ -11,6 +11,7 @@ app:
     topic-exchange-name: links-topic-exchange
 
   database-access-type: jooq
+  bot-update-sender-type: rabbitmq
 
 spring:
   liquibase:
@@ -19,6 +20,10 @@ spring:
     url: jdbc:postgresql://localhost:5432/scrapper
     password: postgres
     username: postgres
+  rabbitmq:
+    host: localhost
+    password: rabbitmq
+    username: rabbitmq
 
 springdoc:
   swagger-ui:

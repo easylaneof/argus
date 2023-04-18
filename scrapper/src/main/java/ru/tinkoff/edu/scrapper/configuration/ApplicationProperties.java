@@ -14,6 +14,7 @@ public record ApplicationProperties(
         Scheduler scheduler,
         Api api,
         @NotNull DatabaseAccessType databaseAccessType,
+        @NotNull BotUpdateSenderType botUpdateSenderType,
         @NotNull RabbitMQ rabbitMq
 ) {
     public record Scheduler(Duration interval, int updateBatchSize) {
