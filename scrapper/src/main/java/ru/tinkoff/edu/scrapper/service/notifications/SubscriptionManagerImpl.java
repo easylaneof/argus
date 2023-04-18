@@ -33,7 +33,11 @@ public class SubscriptionManagerImpl implements SubscriptionManager {
 
         saveLinks(leastRecentlyChecked);
 
-        botUpdateNotifier.notifyBot(updatedLinks);
+        if (updatedLinks.isEmpty()) {
+            log.info("No links updated");
+        } else {
+            botUpdateNotifier.notifyBot(updatedLinks);
+        }
     }
 
     private void saveLinks(List<Link> links) {
