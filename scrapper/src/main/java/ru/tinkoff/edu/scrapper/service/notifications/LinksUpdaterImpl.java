@@ -82,7 +82,7 @@ public class LinksUpdaterImpl implements LinksUpdater {
         if (link.getUpdatedAt() == null) {
             link.setUpdatedAt(updatedAt);
             link.setUpdatesCount(openIssuesCount);
-        } else if (!Objects.equals(link.getUpdatedAt(), updatedAt) || !sameUpdatesCount) {
+        } else if (!link.getUpdatedAt().isEqual(updatedAt) || !sameUpdatesCount) {
             link.setUpdatedAt(updatedAt);
             link.setUpdatesCount(openIssuesCount);
 
@@ -131,7 +131,7 @@ public class LinksUpdaterImpl implements LinksUpdater {
         if (link.getUpdatedAt() == null) {
             link.setUpdatedAt(updatedAt);
             link.setUpdatesCount(answerCount);
-        } else if (!Objects.equals(link.getUpdatedAt(), updatedAt) || !sameUpdatesCount) {
+        } else if (!link.getUpdatedAt().isEqual(updatedAt) || !sameUpdatesCount) {
             link.setUpdatedAt(updatedAt);
             link.setUpdatesCount(answerCount);
 
