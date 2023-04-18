@@ -13,7 +13,8 @@ import java.time.Duration;
 public record ApplicationProperties(
         Scheduler scheduler,
         Api api,
-        @NotNull DatabaseAccessType databaseAccessType
+        @NotNull DatabaseAccessType databaseAccessType,
+        @NotNull RabbitMQ rabbitMq
 ) {
     public record Scheduler(Duration interval, int updateBatchSize) {
     }
@@ -21,5 +22,8 @@ public record ApplicationProperties(
     public record Api(@DefaultValue("https://api.github.com") String githubApiUrl,
                       @DefaultValue("https://api.stackexchange.com/2.3") String stackOverflowApiUrl,
                       String botApiUrl) {
+    }
+
+    public record RabbitMQ(String topicExchangeName, String queueName) {
     }
 }
