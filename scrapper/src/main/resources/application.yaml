@@ -1,6 +1,6 @@
 app:
   scheduler:
-    interval: 30s
+    interval: 1m
     update-batch-size: 5
   api:
     github-api-url: https://api.github.com
@@ -24,6 +24,7 @@ spring:
     host: localhost
     password: rabbitmq
     username: rabbitmq
+    port: 5672
 
 springdoc:
   swagger-ui:
