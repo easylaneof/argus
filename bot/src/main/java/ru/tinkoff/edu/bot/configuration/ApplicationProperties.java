@@ -17,6 +17,6 @@ public record ApplicationProperties(
     record Api(@NotNull String scrapperApiUrl) {
     }
 
-    record ScrapperQueue(String name) {
+    record ScrapperQueue(String name, String dlqName) {
     }
 }
