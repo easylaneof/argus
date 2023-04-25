@@ -5,6 +5,7 @@ app:
     scrapperApiUrl: 'http://localhost:8080'
   scrapper-queue:
     name: links
+    dlq-name: ${app.scrapper-queue.name}.dlq
 
 springdoc:
   swagger-ui:
@@ -15,6 +16,9 @@ spring:
     host: localhost
     password: rabbitmq
     username: rabbitmq
+    listener:
+      simple:
+        default-requeue-rejected: false
 
 server:
   port: 8081
