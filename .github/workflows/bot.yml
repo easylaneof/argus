@@ -21,4 +21,4 @@ jobs:
         with:
           maven-version: 3.8.2
       - name: Build
-        run: mvn package -pl ./bot -am -B -U
+        run: mvn package -pl ./bot -am -B
