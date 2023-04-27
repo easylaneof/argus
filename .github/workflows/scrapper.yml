@@ -3,9 +3,20 @@ name: Scrapper workflow
 on:
   push:
     paths:
+      - '.github/workflows/scrapper.yml'
       - 'scrapper/**'
       - 'scrapper-jooq/**'
       - 'link-parser/**'
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: argus-scrapper-image
+  DOCKERFILE_PATH: scrapper.Dockerfile
+
+permissions:
+  contents: read
+  packages: write
+
 
 jobs:
   build:
@@ -28,3 +39,23 @@ jobs:
           java -jar ./scrapper-jooq/target/scrapper-jooq-*.jar
       - name: Build
         run: mvn package -pl ./scrapper -am -B
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ${{ env.DOCKERFILE_PATH }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
