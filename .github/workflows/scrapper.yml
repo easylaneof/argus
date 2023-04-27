@@ -25,6 +25,6 @@ jobs:
       - name: Generate Jooq classes
         run: |
           mvn package -pl ./scrapper-jooq -B
-          java -jar ./scrapper-jooq/target/scrapper-jooq-1.0.jar
+          java -jar ./scrapper-jooq/target/scrapper-jooq-*.jar
       - name: Build
         run: mvn package -pl ./scrapper -am -B
