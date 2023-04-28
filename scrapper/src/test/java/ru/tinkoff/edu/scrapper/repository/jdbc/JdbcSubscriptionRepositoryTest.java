@@ -1,5 +1,6 @@
 package ru.tinkoff.edu.scrapper.repository.jdbc;
 
+import java.net.URI;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -8,9 +9,6 @@ import ru.tinkoff.edu.scrapper.entity.Link;
 import ru.tinkoff.edu.scrapper.repository.LinkRepository;
 import ru.tinkoff.edu.scrapper.repository.SubscriptionRepository;
 import ru.tinkoff.edu.scrapper.testutil.JdbcRepositoryEnvironment;
-
-import java.net.URI;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -20,7 +18,8 @@ class JdbcSubscriptionRepositoryTest extends JdbcRepositoryEnvironment {
     private static final long FIRST_LINK_ID = 1000;
     private static final URI FIRST_LINK_URI = URI.create("https://github.com/easylaneof/easylaneof");
     private static final long SECOND_LINK_ID = 1001;
-    private static final URI SECOND_LINK_URI = URI.create("https://stackoverflow.com/questions/123321/my-awesome-question");
+    private static final URI SECOND_LINK_URI =
+        URI.create("https://stackoverflow.com/questions/123321/my-awesome-question");
 
     private static final long FIRST_CHAT_ID = 1;
     private static final long SECOND_CHAT_ID = 2;
@@ -35,8 +34,8 @@ class JdbcSubscriptionRepositoryTest extends JdbcRepositoryEnvironment {
 
     private static Link makeTestLink() {
         return Link.builder()
-                .url(UNKNOWN_URI)
-                .build();
+            .url(UNKNOWN_URI)
+            .build();
     }
 
     @Test
@@ -67,14 +66,14 @@ class JdbcSubscriptionRepositoryTest extends JdbcRepositoryEnvironment {
     @Test
     void findLinkChats__dbIsEmpty_throws() {
         assertThatThrownBy(() -> subscriptionRepository.findLinkChats(FIRST_LINK_URI))
-                .isInstanceOf(DataAccessException.class);
+            .isInstanceOf(DataAccessException.class);
     }
 
     @Test
     @Sql("/sql/add_subscriptions.sql")
     void findLinkChats__linkIsUnknown_throws() {
         assertThatThrownBy(() -> subscriptionRepository.findLinkChats(UNKNOWN_URI))
-                .isInstanceOf(DataAccessException.class);
+            .isInstanceOf(DataAccessException.class);
     }
 
     @Test
@@ -103,7 +102,7 @@ class JdbcSubscriptionRepositoryTest extends JdbcRepositoryEnvironment {
         Link link = makeTestLink();
 
         assertThatThrownBy(() -> subscriptionRepository.addLinkToChat(FIRST_CHAT_ID, link))
-                .isInstanceOf(DataAccessException.class);
+            .isInstanceOf(DataAccessException.class);
     }
 
     @Test
@@ -112,7 +111,7 @@ class JdbcSubscriptionRepositoryTest extends JdbcRepositoryEnvironment {
         Link link = linkRepository.findAll().get(0);
 
         assertThatThrownBy(() -> subscriptionRepository.addLinkToChat(FIRST_CHAT_ID, link))
-                .isInstanceOf(DataAccessException.class);
+            .isInstanceOf(DataAccessException.class);
     }
 
     @Test
@@ -131,7 +130,7 @@ class JdbcSubscriptionRepositoryTest extends JdbcRepositoryEnvironment {
         Link link = linkRepository.findAll().get(0);
 
         assertThatThrownBy(() -> subscriptionRepository.addLinkToChat(FIRST_CHAT_ID, link))
-                .isInstanceOf(DataAccessException.class);
+            .isInstanceOf(DataAccessException.class);
     }
 
     @Test
@@ -140,7 +139,7 @@ class JdbcSubscriptionRepositoryTest extends JdbcRepositoryEnvironment {
         Link link = linkRepository.findById(SECOND_LINK_ID).orElseThrow();
 
         assertThatThrownBy(() -> subscriptionRepository.deleteLinkFromChat(SECOND_CHAT_ID, link))
-                .isInstanceOf(DataAccessException.class);
+            .isInstanceOf(DataAccessException.class);
     }
 
     @Test
@@ -149,6 +148,6 @@ class JdbcSubscriptionRepositoryTest extends JdbcRepositoryEnvironment {
         Link link = makeTestLink();
 
         assertThatThrownBy(() -> subscriptionRepository.deleteLinkFromChat(SECOND_CHAT_ID, link))
-                .isInstanceOf(DataAccessException.class);
+            .isInstanceOf(DataAccessException.class);
     }
 }

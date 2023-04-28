@@ -7,6 +7,7 @@ import ru.tinkoff.edu.parser.ParsingResult;
 public class StackOverflowUriParser extends AbstractUriParser {
     private static final String STACK_OVERFLOW_HOST = "stackoverflow.com";
     private static final String QUESTIONS = "questions";
+    public static final int NUMBER_OF_PATH_PARTS = 3;
 
     public StackOverflowUriParser() {
         super(STACK_OVERFLOW_HOST);
@@ -14,7 +15,7 @@ public class StackOverflowUriParser extends AbstractUriParser {
 
     @Override
     protected ParsingResult parseImpl(String[] pathParts) {
-        if (pathParts.length != 3) {
+        if (pathParts.length != NUMBER_OF_PATH_PARTS) {
             return null;
         }
 

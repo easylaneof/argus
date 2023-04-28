@@ -2,15 +2,13 @@ package ru.tinkoff.edu.scrapper.repository.jpa;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityManager;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 import ru.tinkoff.edu.scrapper.entity.Chat;
 import ru.tinkoff.edu.scrapper.repository.ChatRepository;
 import ru.tinkoff.edu.scrapper.testutil.JpaRepositoryEnvironment;
-
-import java.util.List;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;

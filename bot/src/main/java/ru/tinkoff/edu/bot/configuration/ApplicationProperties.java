@@ -8,9 +8,9 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
 public record ApplicationProperties(
-        @NotNull Bot bot,
-        @NotNull Api api,
-        @NotNull ScrapperQueue scrapperQueue
+    @NotNull Bot bot,
+    @NotNull Api api,
+    @NotNull ScrapperQueue scrapperQueue
 ) {
     record Bot(@NotBlank String apiKey) {
     }

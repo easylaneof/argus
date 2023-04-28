@@ -1,13 +1,11 @@
 package ru.tinkoff.edu.parser.uri;
 
+import java.net.URI;
+import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import ru.tinkoff.edu.parser.ParsingResult.GithubRepository;
-
-import java.net.URI;
-import java.util.stream.Stream;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class GithubUriParserTest {
@@ -34,25 +32,25 @@ public class GithubUriParserTest {
 
     private static Stream<Arguments> provideUsersAndRepositories() {
         return Stream.of(
-                        new GithubRepository("sanyarnd", "tinkoff-java-course-2022"),
-                        new GithubRepository("test-user", "test-name")
-                )
-                .flatMap(r -> Stream.of(
-                        Arguments.of(UriTestUtils.githubURI(r.user(), r.name()), r.user(), r.name()),
-                        Arguments.of(UriTestUtils.githubURIWithTrailingSlash(r.user(), r.name()), r.user(), r.name())
-                ));
+                new GithubRepository("sanyarnd", "tinkoff-java-course-2022"),
+                new GithubRepository("test-user", "test-name")
+            )
+            .flatMap(r -> Stream.of(
+                Arguments.of(UriTestUtils.githubURI(r.user(), r.name()), r.user(), r.name()),
+                Arguments.of(UriTestUtils.githubURIWithTrailingSlash(r.user(), r.name()), r.user(), r.name())
+            ));
     }
 
     private static Stream<Arguments> provideInvalidLinks() {
         return Stream.of(
-                        "https://google.com",
-                        "ftp://github.com",
-                        "http://github.com:81",
-                        "https://github.com:81",
-                        "https://github.com",
-                        "https://github.com/settings"
-                )
-                .map(URI::create)
-                .map(Arguments::of);
+                "https://google.com",
+                "ftp://github.com",
+                "http://github.com:81",
+                "https://github.com:81",
+                "https://github.com",
+                "https://github.com/settings"
+            )
+            .map(URI::create)
+            .map(Arguments::of);
     }
 }

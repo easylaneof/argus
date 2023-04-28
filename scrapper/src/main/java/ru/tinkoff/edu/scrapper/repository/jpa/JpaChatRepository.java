@@ -1,13 +1,12 @@
 package ru.tinkoff.edu.scrapper.repository.jpa;
 
 import jakarta.persistence.EntityManager;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.tinkoff.edu.scrapper.entity.Chat;
 import ru.tinkoff.edu.scrapper.repository.ChatRepository;
-
-import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository

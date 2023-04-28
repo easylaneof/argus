@@ -2,7 +2,6 @@ package ru.tinkoff.edu.bot.processor.message;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-
 import java.util.Map;
 
 public interface MessageSender {

@@ -1,9 +1,8 @@
 package ru.tinkoff.edu.bot.service;
 
-import ru.tinkoff.edu.bot.dto.LinkResponse;
-
 import java.util.List;
 import java.util.Optional;
+import ru.tinkoff.edu.bot.dto.LinkResponse;
 
 public interface LinkService {
     Optional<LinkResponse> trackLink(long chatId, String link);

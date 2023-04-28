@@ -1,10 +1,9 @@
 package ru.tinkoff.edu.scrapper.repository;
 
-import ru.tinkoff.edu.scrapper.entity.Link;
-
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import ru.tinkoff.edu.scrapper.entity.Link;
 
 public interface LinkRepository extends CrudRepository<Link, Long> {
     void findOrCreate(Link link);

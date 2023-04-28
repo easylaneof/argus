@@ -2,6 +2,13 @@ package ru.tinkoff.edu.bot.client;
 
 import com.github.javafaker.Faker;
 import com.google.gson.Gson;
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
+import java.util.stream.Stream;
 import lombok.SneakyThrows;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -12,15 +19,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import ru.tinkoff.edu.bot.dto.LinkResponse;
 import ru.tinkoff.edu.bot.dto.ListLinkResponse;
-
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.stream.IntStream;
-import java.util.stream.LongStream;
-import java.util.stream.Stream;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class ScrapperClientTest {
@@ -80,11 +78,11 @@ class ScrapperClientTest {
     @MethodSource("provideChatIds")
     void getAllLinks__responseIsEmpty_returnsResult(long chatId) {
         enqueueResponse("""
-                {
-                  "links": [],
-                  "size": 0
-                }
-                """);
+            {
+              "links": [],
+              "size": 0
+            }
+            """);
 
         ListLinkResponse result = scrapperClient.getAllLinks(chatId).orElseThrow();
 
@@ -173,10 +171,10 @@ class ScrapperClientTest {
 
     private static Stream<Arguments> provideChatIdsAndResult() {
         return provideChatIds()
-                .flatMap(num -> Stream.of(
-                        Arguments.of(num, true),
-                        Arguments.of(num, false)
-                ));
+            .flatMap(num -> Stream.of(
+                Arguments.of(num, true),
+                Arguments.of(num, false)
+            ));
     }
 
     private static Stream<Long> provideChatIds() {
@@ -185,8 +183,8 @@ class ScrapperClientTest {
 
     private static ListLinkResponse listLinkResponse() {
         return new ListLinkResponse(
-                IntStream.range(0, 10).mapToObj(p -> linkResponse()).toList(),
-                10
+            IntStream.range(0, 10).mapToObj(p -> linkResponse()).toList(),
+            10
         );
     }
 
@@ -200,8 +198,8 @@ class ScrapperClientTest {
 
     private void enqueueResponse(String body) {
         mockWebServer.enqueue(new MockResponse()
-                .setBody(body)
-                .addHeader("Content-Type", "application/json")
-                .setResponseCode(200));
+            .setBody(body)
+            .addHeader("Content-Type", "application/json")
+            .setResponseCode(200));
     }
 }

@@ -1,10 +1,9 @@
 package ru.tinkoff.edu.scrapper.repository;
 
-import ru.tinkoff.edu.scrapper.entity.Chat;
-import ru.tinkoff.edu.scrapper.entity.Link;
-
 import java.net.URI;
 import java.util.List;
+import ru.tinkoff.edu.scrapper.entity.Chat;
+import ru.tinkoff.edu.scrapper.entity.Link;
 
 public interface SubscriptionRepository {
     List<Link> findChatLinks(long chatId);

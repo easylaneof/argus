@@ -1,17 +1,13 @@
 package ru.tinkoff.edu.scrapper.repository.jooq;
 
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.jdbc.Sql;
 import ru.tinkoff.edu.scrapper.entity.Chat;
 import ru.tinkoff.edu.scrapper.repository.ChatRepository;
-import ru.tinkoff.edu.scrapper.repository.LinkRepository;
-import ru.tinkoff.edu.scrapper.testutil.JdbcRepositoryEnvironment;
 import ru.tinkoff.edu.scrapper.testutil.JooqRepositoryEnvironment;
-
-import java.util.List;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -88,7 +84,7 @@ class JooqChatRepositoryTest extends JooqRepositoryEnvironment {
         chatRepository.save(chat);
 
         assertThatThrownBy(() -> chatRepository.save(makeTestChat()))
-                .isInstanceOf(DataAccessException.class);
+            .isInstanceOf(DataAccessException.class);
     }
 
     @Test

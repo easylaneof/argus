@@ -1,14 +1,12 @@
 package ru.tinkoff.edu.scrapper.client.bot;
 
+import java.util.List;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import java.util.List;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class HttpBotUpdateSenderTest {
@@ -23,7 +21,7 @@ class HttpBotUpdateSenderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = { 200, 400, 500 })
+    @ValueSource(ints = {200, 400, 500})
     void sendUpdates__differentResponses_sendsRequest(int statusCode) throws Exception {
         mockWebServer.enqueue(new MockResponse().setResponseCode(statusCode));
 
@@ -36,10 +34,10 @@ class HttpBotUpdateSenderTest {
 
     private LinkUpdateRequest linkUpdateRequest() {
         return new LinkUpdateRequest(
-                123L,
-                "",
-                "",
-                List.of()
+            123L,
+            "",
+            "",
+            List.of()
         );
     }
 }

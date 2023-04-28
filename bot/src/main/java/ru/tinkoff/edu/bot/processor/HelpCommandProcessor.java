@@ -4,15 +4,14 @@ import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
+import java.util.List;
+import java.util.Map;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.bot.processor.message.MessageSender;
-
-import java.util.List;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor

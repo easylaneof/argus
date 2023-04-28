@@ -1,7 +1,6 @@
 package ru.tinkoff.edu.parser;
 
 import jakarta.annotation.Nullable;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 

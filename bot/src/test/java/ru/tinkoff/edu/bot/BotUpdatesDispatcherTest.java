@@ -5,6 +5,8 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import java.util.List;
+import java.util.Optional;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,10 +16,6 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.tinkoff.edu.bot.processor.CommandProcessorFacade;
-
-import java.util.List;
-import java.util.Optional;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -77,14 +75,14 @@ class BotUpdatesDispatcherTest {
         // can't make an instance of Update
         // because Update has no constructor/setters
         return gson.fromJson("""
-                {
-                    "message": {
-                        "chat": {
-                            "id": 1
-                        },
-                        "text": "%s"
-                    }
+            {
+                "message": {
+                    "chat": {
+                        "id": 1
+                    },
+                    "text": "%s"
                 }
-                """.formatted(message), Update.class);
+            }
+            """.formatted(message), Update.class);
     }
 }

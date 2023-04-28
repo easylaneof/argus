@@ -1,9 +1,8 @@
 package ru.tinkoff.edu.bot.client;
 
+import java.util.Optional;
 import ru.tinkoff.edu.bot.dto.LinkResponse;
 import ru.tinkoff.edu.bot.dto.ListLinkResponse;
-
-import java.util.Optional;
 
 public interface ScrapperClient {
     boolean registerChat(long chatId);
