@@ -10,6 +10,11 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 ij_continuation_indent_size = 4
 
+[**/*.ftlh]
+ij_formatter_enabled = false
+tab_width = unset
+indent_size = unset
+
 [*.java]
 ij_java_imports_layout = *, $*
 ij_java_packages_to_use_import_on_demand = ""
