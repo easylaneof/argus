@@ -1,9 +1,19 @@
 package ru.tinkoff.edu.scrapper.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Setter
 @Getter
@@ -13,14 +23,6 @@ import java.io.Serializable;
 @IdClass(Subscription.SubscriptionId.class)
 @Table(name = "subscription")
 public class Subscription {
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class SubscriptionId implements Serializable {
-        private Long linkId;
-        private Long chatId;
-    }
-
     @Id
     @Column(name = "link_id", nullable = false)
     private Long linkId;
@@ -36,4 +38,12 @@ public class Subscription {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_id", insertable = false, updatable = false)
     private Chat chat;
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class SubscriptionId implements Serializable {
+        private Long linkId;
+        private Long chatId;
+    }
 }

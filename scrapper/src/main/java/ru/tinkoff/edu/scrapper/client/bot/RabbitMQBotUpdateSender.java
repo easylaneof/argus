@@ -16,9 +16,9 @@ public class RabbitMQBotUpdateSender implements BotUpdateSender {
         log.info("Sending update to bot by rabbitmq {}", request);
 
         rabbitTemplate.convertAndSend(
-                topicExchangeName,
-                linksRoutingKey,
-                request
+            topicExchangeName,
+            linksRoutingKey,
+            request
         );
     }
 }

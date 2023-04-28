@@ -1,5 +1,8 @@
 package ru.tinkoff.edu.scrapper.repository.jooq;
 
+import java.net.URI;
+import java.time.OffsetDateTime;
+import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +11,6 @@ import org.springframework.test.context.jdbc.Sql;
 import ru.tinkoff.edu.scrapper.entity.Link;
 import ru.tinkoff.edu.scrapper.repository.LinkRepository;
 import ru.tinkoff.edu.scrapper.testutil.JooqRepositoryEnvironment;
-
-import java.net.URI;
-import java.time.OffsetDateTime;
-import java.util.List;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -23,7 +21,8 @@ public class JooqLinkRepositoryTest extends JooqRepositoryEnvironment {
     private static final URI FIRST_LINK_URI = URI.create("https://github.com/easylaneof/easylaneof");
 
     private static final long SECOND_LINK_ID = 2L;
-    private static final URI SECOND_LINK_URI = URI.create("https://stackoverflow.com/questions/123321/my-awesome-question");
+    private static final URI SECOND_LINK_URI =
+        URI.create("https://stackoverflow.com/questions/123321/my-awesome-question");
 
     private static final int BATCH_SIZE = 5;
 
@@ -163,7 +162,7 @@ public class JooqLinkRepositoryTest extends JooqRepositoryEnvironment {
             linkRepository.save(link);
 
             assertThatThrownBy(() -> linkRepository.save(makeTestLink()))
-                    .isInstanceOf(DataAccessException.class);
+                .isInstanceOf(DataAccessException.class);
         }
 
         @Test
@@ -186,7 +185,7 @@ public class JooqLinkRepositoryTest extends JooqRepositoryEnvironment {
             link.setId(UNKNOWN_ID);
 
             assertThatThrownBy(() -> linkRepository.save(link))
-                    .isInstanceOf(DataAccessException.class);
+                .isInstanceOf(DataAccessException.class);
         }
 
         @Test
@@ -196,7 +195,7 @@ public class JooqLinkRepositoryTest extends JooqRepositoryEnvironment {
             link.setId(UNKNOWN_ID);
 
             assertThatThrownBy(() -> linkRepository.save(link))
-                    .isInstanceOf(DataAccessException.class);
+                .isInstanceOf(DataAccessException.class);
         }
 
         @Test

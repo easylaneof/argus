@@ -1,10 +1,9 @@
 package ru.tinkoff.edu.bot.processor.util;
 
-import org.springframework.stereotype.Component;
-
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.springframework.stereotype.Component;
 
 @Component
 public class CommandParserImpl implements CommandParser {

@@ -18,5 +18,6 @@ import org.springframework.test.context.ContextConfiguration;
 public class JpaRepositoryEnvironment extends IntegrationEnvironment {
     @ComponentScan("ru.tinkoff.edu.scrapper.repository.jpa")
     @Configuration
-    static class JpaRepositoryTestConfiguration {}
+    static class JpaRepositoryTestConfiguration {
+    }
 }

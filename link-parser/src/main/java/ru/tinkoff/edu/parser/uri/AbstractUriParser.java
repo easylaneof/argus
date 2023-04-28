@@ -1,9 +1,8 @@
 package ru.tinkoff.edu.parser.uri;
 
 import jakarta.annotation.Nullable;
-import ru.tinkoff.edu.parser.ParsingResult;
-
 import java.net.URI;
+import ru.tinkoff.edu.parser.ParsingResult;
 
 public abstract class AbstractUriParser implements UriParser {
     private static final String HTTP = "http";
@@ -28,8 +27,8 @@ public abstract class AbstractUriParser implements UriParser {
     protected abstract @Nullable ParsingResult parseImpl(String[] pathParts);
 
     private boolean isUriOfHost(final URI uri) {
-        return host.equalsIgnoreCase(uri.getHost()) &&
-               (HTTP.equals(uri.getScheme()) || HTTPS.equals(uri.getScheme()));
+        return host.equalsIgnoreCase(uri.getHost())
+               && (HTTP.equals(uri.getScheme()) || HTTPS.equals(uri.getScheme()));
     }
 }
 

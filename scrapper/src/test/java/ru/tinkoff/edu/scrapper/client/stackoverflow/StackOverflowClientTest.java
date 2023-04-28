@@ -1,5 +1,11 @@
 package ru.tinkoff.edu.scrapper.client.stackoverflow;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoField;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -12,14 +18,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import ru.tinkoff.edu.parser.ParsingResult.StackOverflowQuestion;
-
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.temporal.ChronoField;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class StackOverflowClientTest {
@@ -35,20 +33,22 @@ class StackOverflowClientTest {
 
     @ParameterizedTest
     @MethodSource("provideValidResponses")
-    void checkQuestion__responseIsOk_returnsResponse(StackOverflowQuestionResponse expected) throws InterruptedException {
+    void checkQuestion__responseIsOk_returnsResponse(StackOverflowQuestionResponse expected)
+        throws InterruptedException {
         mockApiResponse("""
-                          {
-                              "items": [{"question_id": %s, "last_activity_date": %s, "answer_count": %s}]
-                          }
-                        """.formatted(expected.id(),
-                        expected.updatedAt().toInstant().getLong(ChronoField.INSTANT_SECONDS),
-                        expected.answerCount()
-                )
+                  {
+                      "items": [{"question_id": %s, "last_activity_date": %s, "answer_count": %s}]
+                  }
+                """.formatted(
+                expected.id(),
+                expected.updatedAt().toInstant().getLong(ChronoField.INSTANT_SECONDS),
+                expected.answerCount()
+            )
         );
 
         StackOverflowQuestionResponse result = stackOverflowClient
-                .checkQuestion(new StackOverflowQuestion(Long.toString(expected.id())))
-                .orElseThrow();
+            .checkQuestion(new StackOverflowQuestion(Long.toString(expected.id())))
+            .orElseThrow();
 
         assertThat(result).isEqualTo(expected);
 
@@ -62,23 +62,23 @@ class StackOverflowClientTest {
         final var expectedResult = questions().findFirst().orElseThrow();
 
         String items = questions()
-                .map(question -> "{\"question_id\": %s, \"last_activity_date\": %s, \"answer_count\": %s}".formatted(
-                                question.id(),
-                                question.updatedAt().toInstant().getLong(ChronoField.INSTANT_SECONDS),
-                                question.answerCount()
-                        )
+            .map(question -> "{\"question_id\": %s, \"last_activity_date\": %s, \"answer_count\": %s}".formatted(
+                    question.id(),
+                    question.updatedAt().toInstant().getLong(ChronoField.INSTANT_SECONDS),
+                    question.answerCount()
                 )
-                .collect(Collectors.joining(", "));
+            )
+            .collect(Collectors.joining(", "));
 
         mockApiResponse("""
-                  {
-                      "items": [%s]
-                  }
-                """.formatted(items));
+              {
+                  "items": [%s]
+              }
+            """.formatted(items));
 
         StackOverflowQuestionResponse result = stackOverflowClient
-                .checkQuestion(new StackOverflowQuestion(Long.toString(expectedResult.id())))
-                .orElseThrow();
+            .checkQuestion(new StackOverflowQuestion(Long.toString(expectedResult.id())))
+            .orElseThrow();
 
         assertThat(result).isEqualTo(expectedResult);
 
@@ -90,10 +90,10 @@ class StackOverflowClientTest {
     @Test
     void checkQuestion__responseIsEmpty_returnsEmpty() {
         mockApiResponse("""
-                  {
-                      "items": []
-                  }
-                """);
+              {
+                  "items": []
+              }
+            """);
 
         assertThat(stackOverflowClient.checkQuestion(new StackOverflowQuestion("1"))).isEmpty();
     }
@@ -108,10 +108,10 @@ class StackOverflowClientTest {
 
     private void mockApiResponse(String body) {
         mockWebServer.enqueue(
-                new MockResponse()
-                        .setResponseCode(200)
-                        .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                        .setBody(body)
+            new MockResponse()
+                .setResponseCode(200)
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .setBody(body)
         );
     }
 
@@ -121,12 +121,16 @@ class StackOverflowClientTest {
 
     private static Stream<StackOverflowQuestionResponse> questions() {
         return Stream.of(
-                new StackOverflowQuestionResponse(1L,
-                        OffsetDateTime.ofInstant(Instant.ofEpochSecond(1662505559), ZoneOffset.UTC),
-                        1),
-                new StackOverflowQuestionResponse(123L,
-                        OffsetDateTime.ofInstant(Instant.ofEpochSecond(1590400952), ZoneOffset.UTC),
-                        1)
+            new StackOverflowQuestionResponse(
+                1L,
+                OffsetDateTime.ofInstant(Instant.ofEpochSecond(1662505559), ZoneOffset.UTC),
+                1
+            ),
+            new StackOverflowQuestionResponse(
+                123L,
+                OffsetDateTime.ofInstant(Instant.ofEpochSecond(1590400952), ZoneOffset.UTC),
+                1
+            )
         );
     }
 }

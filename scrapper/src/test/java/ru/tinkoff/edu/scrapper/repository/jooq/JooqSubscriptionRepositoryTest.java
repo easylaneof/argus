@@ -1,5 +1,6 @@
 package ru.tinkoff.edu.scrapper.repository.jooq;
 
+import java.net.URI;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -7,11 +8,7 @@ import org.springframework.test.context.jdbc.Sql;
 import ru.tinkoff.edu.scrapper.entity.Link;
 import ru.tinkoff.edu.scrapper.repository.LinkRepository;
 import ru.tinkoff.edu.scrapper.repository.SubscriptionRepository;
-import ru.tinkoff.edu.scrapper.testutil.JdbcRepositoryEnvironment;
 import ru.tinkoff.edu.scrapper.testutil.JooqRepositoryEnvironment;
-
-import java.net.URI;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -21,7 +18,8 @@ class JooqSubscriptionRepositoryTest extends JooqRepositoryEnvironment {
     private static final long FIRST_LINK_ID = 1000;
     private static final URI FIRST_LINK_URI = URI.create("https://github.com/easylaneof/easylaneof");
     private static final long SECOND_LINK_ID = 1001;
-    private static final URI SECOND_LINK_URI = URI.create("https://stackoverflow.com/questions/123321/my-awesome-question");
+    private static final URI SECOND_LINK_URI =
+        URI.create("https://stackoverflow.com/questions/123321/my-awesome-question");
 
     private static final long FIRST_CHAT_ID = 1;
     private static final long SECOND_CHAT_ID = 2;
@@ -36,8 +34,8 @@ class JooqSubscriptionRepositoryTest extends JooqRepositoryEnvironment {
 
     private static Link makeTestLink() {
         return Link.builder()
-                .url(UNKNOWN_URI)
-                .build();
+            .url(UNKNOWN_URI)
+            .build();
     }
 
     @Test
@@ -68,14 +66,14 @@ class JooqSubscriptionRepositoryTest extends JooqRepositoryEnvironment {
     @Test
     void findLinkChats__dbIsEmpty_throws() {
         assertThatThrownBy(() -> subscriptionRepository.findLinkChats(FIRST_LINK_URI))
-                .isInstanceOf(DataAccessException.class);
+            .isInstanceOf(DataAccessException.class);
     }
 
     @Test
     @Sql("/sql/add_subscriptions.sql")
     void findLinkChats__linkIsUnknown_throws() {
         assertThatThrownBy(() -> subscriptionRepository.findLinkChats(UNKNOWN_URI))
-                .isInstanceOf(DataAccessException.class);
+            .isInstanceOf(DataAccessException.class);
     }
 
     @Test
@@ -104,7 +102,7 @@ class JooqSubscriptionRepositoryTest extends JooqRepositoryEnvironment {
         Link link = makeTestLink();
 
         assertThatThrownBy(() -> subscriptionRepository.addLinkToChat(FIRST_CHAT_ID, link))
-                .isInstanceOf(DataAccessException.class);
+            .isInstanceOf(DataAccessException.class);
     }
 
     @Test
@@ -113,7 +111,7 @@ class JooqSubscriptionRepositoryTest extends JooqRepositoryEnvironment {
         Link link = linkRepository.findAll().get(0);
 
         assertThatThrownBy(() -> subscriptionRepository.addLinkToChat(FIRST_CHAT_ID, link))
-                .isInstanceOf(DataAccessException.class);
+            .isInstanceOf(DataAccessException.class);
     }
 
     @Test
@@ -132,7 +130,7 @@ class JooqSubscriptionRepositoryTest extends JooqRepositoryEnvironment {
         Link link = linkRepository.findAll().get(0);
 
         assertThatThrownBy(() -> subscriptionRepository.addLinkToChat(FIRST_CHAT_ID, link))
-                .isInstanceOf(DataAccessException.class);
+            .isInstanceOf(DataAccessException.class);
     }
 
     @Test
@@ -141,7 +139,7 @@ class JooqSubscriptionRepositoryTest extends JooqRepositoryEnvironment {
         Link link = linkRepository.findById(SECOND_LINK_ID).orElseThrow();
 
         assertThatThrownBy(() -> subscriptionRepository.deleteLinkFromChat(SECOND_CHAT_ID, link))
-                .isInstanceOf(DataAccessException.class);
+            .isInstanceOf(DataAccessException.class);
     }
 
     @Test
@@ -150,6 +148,6 @@ class JooqSubscriptionRepositoryTest extends JooqRepositoryEnvironment {
         Link link = makeTestLink();
 
         assertThatThrownBy(() -> subscriptionRepository.deleteLinkFromChat(SECOND_CHAT_ID, link))
-                .isInstanceOf(DataAccessException.class);
+            .isInstanceOf(DataAccessException.class);
     }
 }

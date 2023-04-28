@@ -1,7 +1,11 @@
 package ru.tinkoff.edu.scrapper.repository.jdbc;
 
+import java.net.URI;
+import java.sql.ResultSet;
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -9,75 +13,68 @@ import org.springframework.stereotype.Repository;
 import ru.tinkoff.edu.scrapper.entity.Link;
 import ru.tinkoff.edu.scrapper.repository.LinkRepository;
 
-import java.net.URI;
-import java.sql.ResultSet;
-import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Optional;
-
 @RequiredArgsConstructor
 @Repository
 public class JdbcLinkRepository implements LinkRepository {
     private static final String SAVE_SQL = """
-            INSERT INTO link(url)
-            VALUES (?)
-            RETURNING id
-            """;
+        INSERT INTO link(url)
+        VALUES (?)
+        RETURNING id
+        """;
 
     private static final String UPDATE_SQL = """
-            UPDATE link
-            SET last_checked_at = ?, updated_at = ?, updates_count = ?
-            WHERE id = ?
-            """;
+        UPDATE link
+        SET last_checked_at = ?, updated_at = ?, updates_count = ?
+        WHERE id = ?
+        """;
 
     private static final String FIND_ALL_SQL = """
-            SELECT id, url, last_checked_at, updated_at, updates_count FROM link;
-            """;
+        SELECT id, url, last_checked_at, updated_at, updates_count FROM link;
+        """;
 
     private static final String FIND_LEAST_RECENTLY_CHECKED_SQL = """
-            SELECT id, url, last_checked_at, updated_at, updates_count
-            FROM link
-            ORDER BY last_checked_at NULLS FIRST
-            LIMIT ?
-            """;
+        SELECT id, url, last_checked_at, updated_at, updates_count
+        FROM link
+        ORDER BY last_checked_at NULLS FIRST
+        LIMIT ?
+        """;
 
     private static final String FIND_BY_ID_SQL = """
-            SELECT id, url, last_checked_at, updated_at, updates_count FROM link WHERE id = ?
-            """;
+        SELECT id, url, last_checked_at, updated_at, updates_count FROM link WHERE id = ?
+        """;
 
     private static final String FIND_BY_URL_SQL = """
-            SELECT id, url, last_checked_at, updated_at, updates_count FROM link WHERE url = ?
-            """;
+        SELECT id, url, last_checked_at, updated_at, updates_count FROM link WHERE url = ?
+        """;
 
     private static final String COUNT_SQL = """
-            SELECT COUNT(*) FROM link
-            """;
+        SELECT COUNT(*) FROM link
+        """;
 
     private static final String DELETE_BY_ID_SQL = """
-            DELETE FROM link WHERE id = ?
-            """;
+        DELETE FROM link WHERE id = ?
+        """;
 
     private static final String FIND_OR_CREATE_SQL = """
-            WITH insert AS (
-              INSERT INTO link(url)
-              VALUES (?)
-              ON CONFLICT (url) DO NOTHING
-              RETURNING id, url, last_checked_at, updated_at, updates_count
-            )
-            SELECT id, url, last_checked_at, updated_at, updates_count FROM insert
-            UNION
-            SELECT id, url, last_checked_at, updated_at, updates_count FROM link
-            WHERE url = ?;
-            """;
-
+        WITH insert AS (
+          INSERT INTO link(url)
+          VALUES (?)
+          ON CONFLICT (url) DO NOTHING
+          RETURNING id, url, last_checked_at, updated_at, updates_count
+        )
+        SELECT id, url, last_checked_at, updated_at, updates_count FROM insert
+        UNION
+        SELECT id, url, last_checked_at, updated_at, updates_count FROM link
+        WHERE url = ?;
+        """;
 
     public static final RowMapper<Link> LINK_MAPPER = (ResultSet rs, int rowNum) -> Link.builder()
-            .id(rs.getLong("id"))
-            .url(URI.create(rs.getString("url")))
-            .lastCheckedAt(rs.getObject("last_checked_at", OffsetDateTime.class))
-            .updatedAt(rs.getObject("updated_at", OffsetDateTime.class))
-            .updatesCount(rs.getInt("updates_count"))
-            .build();
+        .id(rs.getLong("id"))
+        .url(URI.create(rs.getString("url")))
+        .lastCheckedAt(rs.getObject("last_checked_at", OffsetDateTime.class))
+        .updatedAt(rs.getObject("updated_at", OffsetDateTime.class))
+        .updatesCount(rs.getInt("updates_count"))
+        .build();
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -87,15 +84,18 @@ public class JdbcLinkRepository implements LinkRepository {
             long id = entity.getId();
 
             int rows = jdbcTemplate.update(
-                    UPDATE_SQL,
-                    entity.getLastCheckedAt(),
-                    entity.getUpdatedAt(),
-                    entity.getUpdatesCount(),
-                    id
+                UPDATE_SQL,
+                entity.getLastCheckedAt(),
+                entity.getUpdatedAt(),
+                entity.getUpdatesCount(),
+                id
             );
 
             if (rows == 0) {
-                throw new EmptyResultDataAccessException("Expected link with id %s to be stored in db".formatted(id), 0);
+                throw new EmptyResultDataAccessException(
+                    "Expected link with id %s to be stored in db".formatted(id),
+                    0
+                );
             }
         } else {
             Long id = jdbcTemplate.queryForObject(SAVE_SQL, Long.class, entity.getUrl().toString());

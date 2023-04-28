@@ -4,17 +4,15 @@ import com.github.javafaker.Faker;
 import com.google.gson.Gson;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.Test;
-import ru.tinkoff.edu.bot.configuration.TestMessageSender;
-import ru.tinkoff.edu.bot.dto.LinkResponse;
-
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
-
+import lombok.SneakyThrows;
+import org.junit.jupiter.api.Test;
+import ru.tinkoff.edu.bot.configuration.TestMessageSender;
+import ru.tinkoff.edu.bot.dto.LinkResponse;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
@@ -50,7 +48,7 @@ class MessageSenderTest {
 
         // act & assert
         assertThatThrownBy(
-                () -> messageSender.sendTemplate(update, "template")
+            () -> messageSender.sendTemplate(update, "template")
         );
     }
 
@@ -82,10 +80,10 @@ class MessageSenderTest {
         Object text = message.getParameters().get("text");
 
         assertThat(text).isEqualTo("""
-                <b>You don't have any links yet.</b>
+            <b>You don't have any links yet.</b>
 
-                Add some with /track command
-                """);
+            Add some with /track command
+            """);
     }
 
     @Test
@@ -102,8 +100,8 @@ class MessageSenderTest {
         Update update = makeUpdate(CHAT_ID);
 
         List<LinkResponse> links = List.of(
-                new LinkResponse(FIRST_ID, FIRST_URI),
-                new LinkResponse(SECOND_ID, SECOND_URI)
+            new LinkResponse(FIRST_ID, FIRST_URI),
+            new LinkResponse(SECOND_ID, SECOND_URI)
         );
 
         // act
@@ -113,15 +111,15 @@ class MessageSenderTest {
         Object text = message.getParameters().get("text");
 
         assertThat(text).isEqualTo("""
-                <b>Your links:</b>
+            <b>Your links:</b>
 
-                %s
-                """
-                .formatted(links
-                        .stream()
-                        .map(link -> "<a href=\"%s\">%s</a>".formatted(link.url(), link.url()))
-                        .collect(Collectors.joining("\n"))
-                )
+            %s
+            """
+            .formatted(links
+                .stream()
+                .map(link -> "<a href=\"%s\">%s</a>".formatted(link.url(), link.url()))
+                .collect(Collectors.joining("\n"))
+            )
         );
     }
 
@@ -130,13 +128,13 @@ class MessageSenderTest {
         // can't make an instance of Update
         // because Update has no constructor/setters
         return gson.fromJson("""
-                {
-                    "message": {
-                        "chat": {
-                            "id": %s
-                        }
+            {
+                "message": {
+                    "chat": {
+                        "id": %s
                     }
                 }
-                """.formatted(chatId), Update.class);
+            }
+            """.formatted(chatId), Update.class);
     }
 }

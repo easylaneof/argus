@@ -19,8 +19,8 @@ import ru.tinkoff.edu.scrapper.configuration.DatabaseAccessConfiguration;
 @EnableConfigurationProperties({ApplicationProperties.class})
 @Import(LinkParserServiceConfiguration.class)
 @ComponentScan(excludeFilters = @ComponentScan.Filter(
-        type = FilterType.REGEX,
-        pattern = "ru\\.tinkoff\\.edu\\.scrapper\\.repository\\..*")
+    type = FilterType.REGEX,
+    pattern = "ru\\.tinkoff\\.edu\\.scrapper\\.repository\\..*")
 )
 public class ScrapperApplication {
     public static void main(String[] args) {

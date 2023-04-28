@@ -20,12 +20,12 @@ public class HttpBotUpdateSender implements BotUpdateSender {
         log.info("Sending update to bot by http {}", linkUpdateRequest);
 
         client
-                .post()
-                .uri(UPDATES_URI)
-                .body(BodyInserters.fromValue(linkUpdateRequest))
-                .retrieve()
-                .toBodilessEntity()
-                .onErrorResume((ex) -> Mono.empty())
-                .block();
+            .post()
+            .uri(UPDATES_URI)
+            .body(BodyInserters.fromValue(linkUpdateRequest))
+            .retrieve()
+            .toBodilessEntity()
+            .onErrorResume((ex) -> Mono.empty())
+            .block();
     }
 }

@@ -2,7 +2,6 @@ package ru.tinkoff.edu.scrapper.repository.jpa;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-
 import java.net.URI;
 
 @Converter

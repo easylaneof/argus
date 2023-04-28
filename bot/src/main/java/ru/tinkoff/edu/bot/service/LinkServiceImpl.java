@@ -1,13 +1,12 @@
 package ru.tinkoff.edu.bot.service;
 
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.bot.client.ScrapperClient;
 import ru.tinkoff.edu.bot.dto.LinkResponse;
 import ru.tinkoff.edu.bot.dto.ListLinkResponse;
-
-import java.util.List;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -27,7 +26,7 @@ public class LinkServiceImpl implements LinkService {
     @Override
     public List<LinkResponse> getAllLinks(long chatId) {
         return scrapperClient.getAllLinks(chatId)
-                .map(ListLinkResponse::links)
-                .orElse(List.of());
+            .map(ListLinkResponse::links)
+            .orElse(List.of());
     }
 }

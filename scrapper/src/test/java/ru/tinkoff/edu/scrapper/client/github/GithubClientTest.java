@@ -1,5 +1,9 @@
 package ru.tinkoff.edu.scrapper.client.github;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.stream.Stream;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -11,12 +15,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import ru.tinkoff.edu.parser.ParsingResult.GithubRepository;
-
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.stream.Stream;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class GithubClientTest {
@@ -32,18 +30,19 @@ class GithubClientTest {
 
     @ParameterizedTest
     @MethodSource("provideValidResponses")
-    void checkRepository__responseIsOk_returnsResponse(GithubRepositoryResponse expected, String user, String repoName) throws InterruptedException {
+    void checkRepository__responseIsOk_returnsResponse(GithubRepositoryResponse expected, String user, String repoName)
+        throws InterruptedException {
         mockApiResponse("""
-                  {
-                      "id": %s,
-                      "pushed_at": "%s",
-                      "open_issues_count": %s
-                  }
-                """.formatted(expected.id(), expected.updatedAt(), expected.openIssuesCount()));
+              {
+                  "id": %s,
+                  "pushed_at": "%s",
+                  "open_issues_count": %s
+              }
+            """.formatted(expected.id(), expected.updatedAt(), expected.openIssuesCount()));
 
         GithubRepositoryResponse result = githubClient
-                .checkRepository(new GithubRepository(user, repoName))
-                .orElseThrow();
+            .checkRepository(new GithubRepository(user, repoName))
+            .orElseThrow();
 
         assertThat(result).isEqualTo(expected);
 
@@ -62,22 +61,24 @@ class GithubClientTest {
 
     private void mockApiResponse(String body) {
         mockWebServer.enqueue(
-                new MockResponse()
-                        .setResponseCode(200)
-                        .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                        .setBody(body)
+            new MockResponse()
+                .setResponseCode(200)
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .setBody(body)
         );
     }
 
     private static Stream<Arguments> provideValidResponses() {
         return Stream.of(
-                Arguments.of(
-                        new GithubRepositoryResponse(1L,
-                                OffsetDateTime.ofInstant(Instant.ofEpochSecond(1662505559), ZoneOffset.UTC),
-                                1),
-                        "user",
-                        "repo-name"
-                )
+            Arguments.of(
+                new GithubRepositoryResponse(
+                    1L,
+                    OffsetDateTime.ofInstant(Instant.ofEpochSecond(1662505559), ZoneOffset.UTC),
+                    1
+                ),
+                "user",
+                "repo-name"
+            )
         );
     }
 }

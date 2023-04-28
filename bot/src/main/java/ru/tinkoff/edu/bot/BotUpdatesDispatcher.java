@@ -5,16 +5,15 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.bot.processor.CommandProcessorFacade;
 
-import java.util.List;
-
 @Slf4j
 @RequiredArgsConstructor
 public class BotUpdatesDispatcher implements UpdatesListener {
-    static String HELP_MESSAGE = "Unexpected message. Try using /help";
+    static final String HELP_MESSAGE = "Unexpected message. Try using /help";
 
     private final TelegramBot bot;
 

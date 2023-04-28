@@ -1,8 +1,10 @@
 package ru.tinkoff.edu.scrapper.repository.jpa;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
+import java.net.URI;
+import java.time.OffsetDateTime;
+import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +12,6 @@ import org.springframework.test.context.jdbc.Sql;
 import ru.tinkoff.edu.scrapper.entity.Link;
 import ru.tinkoff.edu.scrapper.repository.LinkRepository;
 import ru.tinkoff.edu.scrapper.testutil.JpaRepositoryEnvironment;
-
-import java.net.URI;
-import java.time.OffsetDateTime;
-import java.util.List;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -26,12 +23,12 @@ class JpaLinkRepositoryTest extends JpaRepositoryEnvironment {
     private static final URI FIRST_LINK_URI = URI.create("https://github.com/easylaneof/easylaneof");
 
     private static final long SECOND_LINK_ID = 2L;
-    private static final URI SECOND_LINK_URI = URI.create("https://stackoverflow.com/questions/123321/my-awesome-question");
+    private static final URI SECOND_LINK_URI =
+        URI.create("https://stackoverflow.com/questions/123321/my-awesome-question");
 
     private static final int BATCH_SIZE = 5;
 
     private static final long UNKNOWN_ID = 1000L;
-
 
     private static Link makeTestLink() {
         return Link.builder().url(UNKNOWN_URI).build();
@@ -173,7 +170,7 @@ class JpaLinkRepositoryTest extends JpaRepositoryEnvironment {
                 linkRepository.save(makeTestLink());
                 em.flush();
             })
-                    .isInstanceOf(PersistenceException.class);
+                .isInstanceOf(PersistenceException.class);
         }
 
         @Test
@@ -196,7 +193,7 @@ class JpaLinkRepositoryTest extends JpaRepositoryEnvironment {
             link.setId(UNKNOWN_ID);
 
             assertThatThrownBy(() -> linkRepository.save(link))
-                    .isInstanceOf(PersistenceException.class);
+                .isInstanceOf(PersistenceException.class);
         }
 
         @Test
@@ -206,7 +203,7 @@ class JpaLinkRepositoryTest extends JpaRepositoryEnvironment {
             link.setId(UNKNOWN_ID);
 
             assertThatThrownBy(() -> linkRepository.save(link))
-                    .isInstanceOf(PersistenceException.class);
+                .isInstanceOf(PersistenceException.class);
         }
 
         @Test

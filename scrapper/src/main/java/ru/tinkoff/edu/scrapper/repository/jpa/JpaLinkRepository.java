@@ -1,23 +1,22 @@
 package ru.tinkoff.edu.scrapper.repository.jpa;
 
 import jakarta.persistence.EntityManager;
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.tinkoff.edu.scrapper.entity.Link;
 import ru.tinkoff.edu.scrapper.repository.LinkRepository;
 
-import java.net.URI;
-import java.util.List;
-import java.util.Optional;
-
 @RequiredArgsConstructor
 @Repository
 public class JpaLinkRepository implements LinkRepository {
     private static final String FIND_LEAST_RECENTLY_CHECKED_HQL = """
-                        FROM Link l
-                        ORDER BY l.lastCheckedAt NULLS FIRST
-                        LIMIT :limit
-            """;
+                    FROM Link l
+                    ORDER BY l.lastCheckedAt NULLS FIRST
+                    LIMIT :limit
+        """;
 
     private final EntityManager em;
 
@@ -65,15 +64,15 @@ public class JpaLinkRepository implements LinkRepository {
     @Override
     public List<Link> findLeastRecentlyChecked(int batchSize) {
         return em.createQuery(FIND_LEAST_RECENTLY_CHECKED_HQL, Link.class)
-                .setParameter("limit", batchSize).getResultList();
+            .setParameter("limit", batchSize).getResultList();
     }
 
     @Override
     public Optional<Link> findByUrl(URI url) {
         return em.createQuery("from Link l where l.url = :url", Link.class)
-                .setParameter("url", url)
-                .getResultList()
-                .stream()
-                .findAny();
+            .setParameter("url", url)
+            .getResultList()
+            .stream()
+            .findAny();
     }
 }

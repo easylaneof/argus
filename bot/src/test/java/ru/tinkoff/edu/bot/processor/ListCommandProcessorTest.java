@@ -2,22 +2,22 @@ package ru.tinkoff.edu.bot.processor;
 
 import com.google.gson.Gson;
 import com.pengrad.telegrambot.model.Update;
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.tinkoff.edu.bot.processor.message.MessageSender;
 import ru.tinkoff.edu.bot.dto.LinkResponse;
+import ru.tinkoff.edu.bot.processor.message.MessageSender;
 import ru.tinkoff.edu.bot.service.LinkService;
-
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ListCommandProcessorTest {
@@ -57,7 +57,7 @@ class ListCommandProcessorTest {
 
         // assert
         verify(messageSender, times(1))
-                .sendTemplate(update, "list.ftlh", Map.of("links", links));
+            .sendTemplate(update, "list.ftlh", Map.of("links", links));
 
         verify(linkService, times(1)).getAllLinks(CHAT_ID);
     }
@@ -67,13 +67,13 @@ class ListCommandProcessorTest {
         // can't make an instance of Update
         // because Update has no constructor/setters
         return gson.fromJson("""
-                {
-                    "message": {
-                        "chat": {
-                            "id": %s
-                        }
+            {
+                "message": {
+                    "chat": {
+                        "id": %s
                     }
                 }
-                """.formatted(chatId), Update.class);
+            }
+            """.formatted(chatId), Update.class);
     }
 }

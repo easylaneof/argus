@@ -4,13 +4,12 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import org.springframework.stereotype.Component;
-
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
@@ -28,6 +27,6 @@ public final class MessageSenderImpl implements MessageSender {
         Writer result = new StringWriter();
         template.process(data, result);
         return new SendMessage(chatId, result.toString())
-                .parseMode(ParseMode.HTML);
+            .parseMode(ParseMode.HTML);
     }
 }

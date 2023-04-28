@@ -1,13 +1,12 @@
 package ru.tinkoff.edu.scrapper.client.stackoverflow;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 import ru.tinkoff.edu.parser.ParsingResult.StackOverflowQuestion;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class StackOverflowClientImpl implements StackOverflowClient {
     private static final String QUESTION_URI_FORMAT = "/questions/%s?site=stackoverflow";
@@ -29,11 +28,11 @@ public class StackOverflowClientImpl implements StackOverflowClient {
         String ids = questions.stream().map(StackOverflowQuestion::id).collect(Collectors.joining(";"));
 
         return client
-                .get()
-                .uri(QUESTION_URI_FORMAT.formatted(ids))
-                .retrieve()
-                .bodyToMono(StackOverflowQuestionsResponse.class)
-                .onErrorResume(WebClientResponseException.class, (ex) -> Mono.empty())
-                .blockOptional();
+            .get()
+            .uri(QUESTION_URI_FORMAT.formatted(ids))
+            .retrieve()
+            .bodyToMono(StackOverflowQuestionsResponse.class)
+            .onErrorResume(WebClientResponseException.class, (ex) -> Mono.empty())
+            .blockOptional();
     }
 }

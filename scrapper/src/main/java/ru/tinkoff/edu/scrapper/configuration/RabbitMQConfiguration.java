@@ -1,6 +1,10 @@
 package ru.tinkoff.edu.scrapper.configuration;
 
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.QueueBuilder;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -13,9 +17,9 @@ public class RabbitMQConfiguration {
     @Bean
     public Queue linksQueue(ApplicationProperties properties) {
         return QueueBuilder
-                .durable(properties.rabbitMq().queueName())
-                .withArgument("x-dead-letter-exchange", properties.rabbitMq().queueName() + ".dlx")
-                .build();
+            .durable(properties.rabbitMq().queueName())
+            .withArgument("x-dead-letter-exchange", properties.rabbitMq().queueName() + ".dlx")
+            .build();
     }
 
     @Bean
@@ -41,10 +45,10 @@ public class RabbitMQConfiguration {
     // That's why we declare queue manually
     @Bean
     public RabbitAdmin rabbitAdmin(
-            ConnectionFactory connectionFactory,
-            TopicExchange exchange,
-            Queue queue,
-            Binding binding
+        ConnectionFactory connectionFactory,
+        TopicExchange exchange,
+        Queue queue,
+        Binding binding
     ) {
         RabbitAdmin rabbitAdmin = new RabbitAdmin(connectionFactory);
 

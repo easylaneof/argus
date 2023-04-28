@@ -4,11 +4,10 @@ import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.BaseRequest;
 import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
@@ -32,8 +31,8 @@ public class CommandProcessorFacade {
 
     public List<BotCommand> getCommands() {
         return commandProcessors
-                .stream()
-                .map(CommandProcessor::command)
-                .toList();
+            .stream()
+            .map(CommandProcessor::command)
+            .toList();
     }
 }

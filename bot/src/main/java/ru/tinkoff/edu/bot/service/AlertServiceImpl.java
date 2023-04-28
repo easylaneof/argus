@@ -2,12 +2,11 @@ package ru.tinkoff.edu.bot.service;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.SendMessage;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.bot.dto.LinkUpdate;
 import ru.tinkoff.edu.bot.processor.message.MessageSender;
-
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Component
