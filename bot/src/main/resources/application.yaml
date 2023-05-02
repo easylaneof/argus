@@ -7,9 +7,8 @@ app:
     name: links
     dlq-name: ${app.scrapper-queue.name}.dlq
 
-springdoc:
-  swagger-ui:
-    path: /swagger-ui
+server:
+  port: 8081
 
 spring:
   rabbitmq:
@@ -20,5 +19,30 @@ spring:
       simple:
         default-requeue-rejected: false
 
-server:
-  port: 8081
+management:
+  endpoints:
+    web:
+      base-path: "/"
+      path-mapping:
+        health: "health"
+        prometheus: "metrics"
+    enabled-by-default: false
+
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+    prometheus:
+      enabled: true
+
+  server:
+    port: 8091
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
