@@ -15,6 +15,8 @@ app:
   bot-update-sender-type: rabbitmq
 
 spring:
+  application:
+    name: scrapper
   liquibase:
     enabled: false
   datasource:
@@ -26,6 +28,30 @@ spring:
     password: rabbitmq
     username: rabbitmq
     port: 5672
+
+management:
+  endpoints:
+    web:
+      base-path: "/"
+      path-mapping:
+        health: "health"
+        prometheus: "metrics"
+    enabled-by-default: false
+
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+    prometheus:
+      enabled: true
+
+  server:
+    port: 8090
 
 springdoc:
   swagger-ui:
