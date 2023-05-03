@@ -1,6 +1,5 @@
 package ru.tinkoff.edu.scrapper.configuration;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -25,8 +24,8 @@ public class RabbitMQConfiguration {
     }
 
     @Bean
-    public Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with("links");
+    public Binding binding(Queue queue, TopicExchange exchange, ApplicationProperties properties) {
+        return BindingBuilder.bind(queue).to(exchange).with(properties.rabbitMq().linksRoutingKey());
     }
 
     @Bean

@@ -18,6 +18,10 @@ public class BotUpdateSenderConfiguration {
     @ConditionalOnProperty(prefix = "app", name = "bot-update-sender-type", havingValue = "rabbitmq")
     @Bean
     public RabbitMQBotUpdateSender rabbitMQBotUpdateSender(RabbitTemplate rabbitTemplate, ApplicationProperties properties) {
-        return new RabbitMQBotUpdateSender(rabbitTemplate, properties.rabbitMq().topicExchangeName());
+        return new RabbitMQBotUpdateSender(
+                rabbitTemplate,
+                properties.rabbitMq().topicExchangeName(),
+                properties.rabbitMq().linksRoutingKey()
+        );
     }
 }

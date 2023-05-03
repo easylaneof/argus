@@ -9,6 +9,7 @@ app:
   rabbit-mq:
     queue-name: links
     topic-exchange-name: links-topic-exchange
+    links-routing-key: links
 
   database-access-type: jooq
   bot-update-sender-type: rabbitmq
