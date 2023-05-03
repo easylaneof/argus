@@ -29,7 +29,7 @@ public class SubscriptionManagerImpl implements SubscriptionManager {
                 .collect(Collectors.joining("\n"))
         );
 
-        List<LinksUpdater.Delta> updatedLinks = linksUpdater.updateLinks(leastRecentlyChecked);
+        List<LinkUpdateDelta> updatedLinks = linksUpdater.updateLinks(leastRecentlyChecked);
 
         saveLinks(leastRecentlyChecked);
 
