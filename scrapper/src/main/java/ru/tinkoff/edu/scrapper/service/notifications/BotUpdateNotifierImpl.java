@@ -18,7 +18,7 @@ public class BotUpdateNotifierImpl implements BotUpdateNotifier {
     private final SubscriptionRepository subscriptionRepository;
 
     @Override
-    public void notifyBot(List<LinksUpdater.Delta> updatedLinks) {
+    public void notifyBot(List<LinkUpdateDelta> updatedLinks) {
         for (var delta : updatedLinks) {
             Link link = delta.link();
 
