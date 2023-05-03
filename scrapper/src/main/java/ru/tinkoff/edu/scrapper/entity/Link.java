@@ -48,4 +48,8 @@ public class Link {
         subscriptions.add(subscription);
         subscription.setLink(this);
     }
+
+    public boolean wasUpdatedAt(OffsetDateTime date) {
+        return updatedAt.isEqual(date);
+    }
 }
