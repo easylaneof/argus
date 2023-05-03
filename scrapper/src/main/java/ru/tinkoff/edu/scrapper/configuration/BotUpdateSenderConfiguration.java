@@ -9,7 +9,7 @@ import ru.tinkoff.edu.scrapper.client.bot.RabbitMQBotUpdateSender;
 
 @Configuration
 public class BotUpdateSenderConfiguration {
-    @ConditionalOnProperty(prefix = "app", name = "bot-update-sender-type", havingValue = "http")
+    @ConditionalOnProperty(prefix = "app", name = "bot-update-sender-type", havingValue = "http", matchIfMissing = true)
     @Bean
     public HttpBotUpdateSender httpBotUpdateSender(ApplicationProperties properties) {
         return new HttpBotUpdateSender(properties.api().botApiUrl());
