@@ -11,14 +11,13 @@ import ru.tinkoff.edu.scrapper.client.github.GithubRepositoryResponse;
 import ru.tinkoff.edu.scrapper.client.stackoverflow.StackOverflowClient;
 import ru.tinkoff.edu.scrapper.client.stackoverflow.StackOverflowQuestionResponse;
 import ru.tinkoff.edu.scrapper.entity.Link;
-
 import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-// FIXME: refactor
+// FIXME: refactor, introduce link update handler (GithubUpdateHandler, SOUpdateHandler)
 public class LinksUpdaterImpl implements LinksUpdater {
     private final GithubClient githubClient;
 
@@ -30,7 +29,7 @@ public class LinksUpdaterImpl implements LinksUpdater {
     }
 
     @Override
-    public List<Delta> updateLinks(List<Link> links) {
+    public List<LinkUpdateDelta> updateLinks(List<Link> links) {
         List<LinkAndParsingResult<GithubRepository>> githubLinks = new ArrayList<>();
         List<LinkAndParsingResult<StackOverflowQuestion>> stackOverflowLinks = new ArrayList<>();
 
@@ -40,7 +39,8 @@ public class LinksUpdaterImpl implements LinksUpdater {
             link.setLastCheckedAt(OffsetDateTime.now());
 
             if (result == null) {
-                throw new RuntimeException("Expected a parsable link, found " + link.getUrl()); // TODO: create exception hierarchy
+                throw new RuntimeException(
+                        "Expected a parsable link, found " + link.getUrl()); // TODO: create exception hierarchy
             }
 
             if (result instanceof GithubRepository githubRepository) {
@@ -48,11 +48,12 @@ public class LinksUpdaterImpl implements LinksUpdater {
             } else if (result instanceof StackOverflowQuestion stackOverflowQuestion) {
                 stackOverflowLinks.add(new LinkAndParsingResult<>(link, stackOverflowQuestion));
             } else {
-                throw new RuntimeException("Expected " + link.getUrl() + " to be github or stackoverflow link, found " + result);
+                throw new RuntimeException(
+                        "Expected " + link.getUrl() + " to be github or stackoverflow link, found " + result);
             }
         }
 
-        List<Delta> updatedLinks = new ArrayList<>();
+        List<LinkUpdateDelta> updatedLinks = new ArrayList<>();
 
         handleGithubLinks(updatedLinks, githubLinks);
 
@@ -61,7 +62,7 @@ public class LinksUpdaterImpl implements LinksUpdater {
         return updatedLinks;
     }
 
-    private void handleGithubLinks(List<Delta> updatedLinks, List<LinkAndParsingResult<GithubRepository>> links) {
+    private void handleGithubLinks(List<LinkUpdateDelta> updatedLinks, List<LinkAndParsingResult<GithubRepository>> links) {
         for (var linkAndResult : links) {
             Link link = linkAndResult.link();
             GithubRepository parsingResult = linkAndResult.parsed();
@@ -72,29 +73,16 @@ public class LinksUpdaterImpl implements LinksUpdater {
         }
     }
 
-    private static Optional<Delta> handleGithubLink(Link link, GithubRepositoryResponse response) {
-        OffsetDateTime updatedAt = response.updatedAt();
-        Integer openIssuesCount = response.openIssuesCount();
-
-        boolean sameUpdatesCount = Objects.equals(link.getUpdatesCount(), openIssuesCount);
-
-        // first check, do not alert
-        if (link.getUpdatedAt() == null) {
-            link.setUpdatedAt(updatedAt);
-            link.setUpdatesCount(openIssuesCount);
-        } else if (!link.getUpdatedAt().isEqual(updatedAt) || !sameUpdatesCount) {
-            link.setUpdatedAt(updatedAt);
-            link.setUpdatesCount(openIssuesCount);
-
-            String message = sameUpdatesCount ? "something happened!" : "got a new issue!";
-
-            return Optional.of(new Delta(link, message));
-        }
-
-        return Optional.empty();
+    private static Optional<LinkUpdateDelta> handleGithubLink(Link link, GithubRepositoryResponse response) {
+        return handleLinkUpdate(link,
+                response.updatedAt(),
+                response.openIssuesCount(),
+                "got a new issue!");
     }
 
-    private void handleStackOverflowLinks(List<Delta> updatedLinks, List<LinkAndParsingResult<ParsingResult.StackOverflowQuestion>> links) {
+    private void handleStackOverflowLinks(List<LinkUpdateDelta> updatedLinks,
+                                          List<LinkAndParsingResult<StackOverflowQuestion>> links
+    ) {
         if (links.isEmpty()) {
             return;
         }
@@ -117,27 +105,38 @@ public class LinksUpdaterImpl implements LinksUpdater {
         });
     }
 
-    private static Optional<Delta> handleStackOverflowLink(
+    private static Optional<LinkUpdateDelta> handleStackOverflowLink(
             Map<Long, Link> idToLink,
             StackOverflowQuestionResponse item
     ) {
-        Link link = idToLink.get(item.id());
+        return handleLinkUpdate(
+                idToLink.get(item.id()),
+                item.updatedAt(),
+                item.answerCount(),
+                "got a new answer!"
+        );
+    }
 
-        OffsetDateTime updatedAt = item.updatedAt();
-        Integer answerCount = item.answerCount();
-        boolean sameUpdatesCount = Objects.equals(link.getUpdatesCount(), answerCount);
+    private static Optional<LinkUpdateDelta> handleLinkUpdate(
+            Link link,
+            OffsetDateTime updatedAt,
+            Integer updatesCount,
+            String updatesCountChangeMessage
+    ) {
+        boolean sameUpdatesCount = Objects.equals(link.getUpdatesCount(), updatesCount);
+        boolean sameUpdatedAt = link.wasUpdatedAt(updatedAt);
 
         // first check, do not alert
         if (link.getUpdatedAt() == null) {
             link.setUpdatedAt(updatedAt);
-            link.setUpdatesCount(answerCount);
-        } else if (!link.getUpdatedAt().isEqual(updatedAt) || !sameUpdatesCount) {
+            link.setUpdatesCount(updatesCount);
+        } else if (!sameUpdatedAt || !sameUpdatesCount) {
             link.setUpdatedAt(updatedAt);
-            link.setUpdatesCount(answerCount);
+            link.setUpdatesCount(updatesCount);
 
-            String message = sameUpdatesCount ? "something happened!" : "got a new answer!";
+            String message = sameUpdatesCount ? "something happened!" : updatesCountChangeMessage;
 
-            return Optional.of(new Delta(link, message));
+            return Optional.of(new LinkUpdateDelta(link, message));
         }
 
         return Optional.empty();
