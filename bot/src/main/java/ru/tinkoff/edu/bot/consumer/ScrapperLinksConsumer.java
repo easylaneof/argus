@@ -16,7 +16,7 @@ public class ScrapperLinksConsumer {
     private final AlertService alertService;
 
     @RabbitHandler
-    public void receiver(LinkUpdate linkUpdate) {
+    public void receive(LinkUpdate linkUpdate) {
         log.info("Got an update by RabbitMQ {}", linkUpdate);
 
         alertService.alertAboutUpdate(linkUpdate);

@@ -11,7 +11,7 @@ import ru.tinkoff.edu.bot.dto.LinkUpdate;
 @RabbitListener(queues = "${app.scrapper-queue.dlq-name}")
 public class DeadLetterQueueConsumer {
     @RabbitHandler
-    public void receiver(LinkUpdate update) {
+    public void receive(LinkUpdate update) {
         log.info("Failed processing update: {}", update);
     }
 }
