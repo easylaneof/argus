@@ -26,6 +26,6 @@ public record ApplicationProperties(
                       @NotBlank String botApiUrl) {
     }
 
-    public record RabbitMQ(@NotBlank String topicExchangeName, @NotBlank String queueName) {
+    public record RabbitMQ(@NotBlank String topicExchangeName, @NotBlank String queueName, @NotBlank String linksRoutingKey) {
     }
 }
