@@ -5,7 +5,7 @@ app:
   api:
     github-api-url: https://api.github.com
     stack-overflow-api-url: https://api.stackexchange.com/2.3
-    bot-api-url: http://localhost:8081
+    bot-api-url: ${APP_BOT_API_URL}
   rabbit-mq:
     queue-name: links
     topic-exchange-name: links-topic-exchange
@@ -20,19 +20,21 @@ spring:
   liquibase:
     enabled: false
   datasource:
-    url: jdbc:postgresql://localhost:5432/scrapper
+    url: ${APP_POSTGRES_JDBC_URL}
     password: postgres
     username: postgres
   rabbitmq:
-    host: localhost
+    host: ${APP_RABBITMQ_HOST}
+    port: 5672
     password: rabbitmq
     username: rabbitmq
-    port: 5672
 
 management:
   endpoints:
     web:
       base-path: "/"
+      exposure:
+        include: info, health, prometheus
       path-mapping:
         health: "health"
         prometheus: "metrics"
