@@ -2,7 +2,7 @@ app:
   bot:
     apiKey: ${APP_TELEGRAM_KEY}
   api:
-    scrapperApiUrl: 'http://localhost:8080'
+    scrapperApiUrl: ${APP_SCRAPPER_API_URL}
   scrapper-queue:
     name: links
     dlq-name: ${app.scrapper-queue.name}.dlq
@@ -11,8 +11,10 @@ server:
   port: 8081
 
 spring:
+  application:
+    name: bot
   rabbitmq:
-    host: localhost
+    host: ${APP_RABBITMQ_HOST}
     password: rabbitmq
     username: rabbitmq
     listener:
@@ -23,6 +25,8 @@ management:
   endpoints:
     web:
       base-path: "/"
+      exposure:
+        include: info, health, prometheus
       path-mapping:
         health: "health"
         prometheus: "metrics"
