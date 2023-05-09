@@ -12,6 +12,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: argus-scrapper-image
   DOCKERFILE_PATH: scrapper.Dockerfile
+  JOOQ_SCRAPPER_PATH: ./scrapper-jooq/target/scrapper-jooq-*.jar
 
 permissions:
   contents: read
@@ -53,7 +54,7 @@ jobs:
       - name: Generate Jooq classes
         run: |
           mvn package -pl ./scrapper-jooq -B
-          java -jar ./scrapper-jooq/target/scrapper-jooq-*.jar
+          java -jar ${{ JOOQ_SCRAPPER_PATH }}
       - name: Build
         run: mvn package -pl ./scrapper -am -B
 

@@ -1,6 +1,6 @@
 FROM amazoncorretto:17.0.7-alpine
 
-COPY bot/target/bot-*.jar app.jar
+COPY bot/target/bot-*.jar bot.jar
 
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "/bot.jar"]
