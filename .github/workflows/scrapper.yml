@@ -54,7 +54,7 @@ jobs:
       - name: Generate Jooq classes
         run: |
           mvn package -pl ./scrapper-jooq -B
-          java -jar ${{ JOOQ_SCRAPPER_PATH }}
+          java -jar ${{ env.JOOQ_SCRAPPER_PATH }}
       - name: Build
         run: mvn package -pl ./scrapper -am -B
 
